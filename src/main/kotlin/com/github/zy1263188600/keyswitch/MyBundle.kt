@@ -1,4 +1,4 @@
-package org.jetbrains.plugins.template
+package com.github.zy1263188600.keyswitch
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.NonNls

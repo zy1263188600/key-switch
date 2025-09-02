@@ -21,6 +21,7 @@ kotlin {
 
 // Configure project's dependencies
 repositories {
+    maven { url = uri("https://maven.aliyun.com/repository/public") }
     mavenCentral()
 
     // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
@@ -31,6 +32,11 @@ repositories {
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
+    implementation("com.github.mmarquee:ui-automation:0.7.0") {
+        exclude(group = "net.java.dev.jna",module= "jna")
+        exclude(group = "net.java.dev.jna",module= "jna-platform")
+    }
+
     testImplementation(libs.junit)
     testImplementation(libs.opentest4j)
 

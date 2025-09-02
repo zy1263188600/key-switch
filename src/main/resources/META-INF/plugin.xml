@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.zy1263188600.keyswitch</id>
-    <name>key-switch</name>
+    <name>Key-Switch</name>
     <vendor>zy1263188600</vendor>
 
     <depends>com.intellij.modules.platform</depends>
@@ -9,7 +9,13 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.zy1263188600.keyswitch.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.zy1263188600.keyswitch.startup.MyProjectActivity" />
+        <!-- 应用级配置 -->
+        <applicationService serviceImplementation="view.SettingsState"/>
+        <!-- 注册到设置页面 -->
+        <applicationConfigurable
+                groupId="tools"
+                instance="view.PluginSettingsConfigurable"
+                displayName="Key-Switch"
+                id="myPlugin.settings"/>
     </extensions>
 </idea-plugin>

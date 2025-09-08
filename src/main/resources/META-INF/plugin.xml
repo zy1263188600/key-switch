@@ -1,21 +1,24 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.zy1263188600.keyswitch</id>
-    <name>Key-Switch</name>
+    <name>key-switch</name>
     <vendor>zy1263188600</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="editoraction.PluginStartup"/>
         <!-- 应用级配置 -->
         <applicationService serviceImplementation="view.SettingsState"/>
         <!-- 注册到设置页面 -->
         <applicationConfigurable
                 groupId="tools"
                 instance="view.PluginSettingsConfigurable"
-                displayName="Key-Switch"
+                displayName="key-switch"
                 id="myPlugin.settings"/>
     </extensions>
 </idea-plugin>

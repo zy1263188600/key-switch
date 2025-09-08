@@ -14,7 +14,7 @@ public class InputMethodSwitcher {
             SettingsState settingsState = SettingsState.getInstance();
             return StrategyFactory.createStrategy(settingsState.strategyClass).getCurrentMode();
         } catch (Exception e) {
-            new UIAutomationSwitcher().change();
+            new UIAutomationSwitcher().getCurrentMode();
         }
         return InputState.ENGLISH;
     }

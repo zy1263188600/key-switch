@@ -1,10 +1,13 @@
 package inputmethod.InputMethodChecker2;
 
+import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.Variant;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.ptr.PointerByReference;
+import editoraction.EditorContextAction;
 import enums.InputState;
+import inputmethod.InputMethodChecker1.InputMethodChecker;
 import inputmethod.InputMethodSwitchStrategy;
 import mmarquee.automation.AutomationException;
 import mmarquee.automation.Element;
@@ -13,10 +16,13 @@ import mmarquee.uiautomation.IUIAutomationElement;
 import mmarquee.uiautomation.IUIAutomationLegacyIAccessiblePattern;
 import mmarquee.uiautomation.IUIAutomationLegacyIAccessiblePatternConverter;
 import mmarquee.uiautomation.TreeScope;
+import com.intellij.openapi.diagnostic.Logger;
 
 import java.util.List;
 
 public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
+
+    private static final Logger LOG = Logger.getInstance(EditorContextAction.class);
 
     public static final int SUCCESS = 0;
     public static final int COM_INIT_FAILED_STA = 1;
@@ -100,15 +106,56 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
         return isEnglishMode() ? InputState.ENGLISH : InputState.CHINESE;
     }
 
-    public static boolean isEnglishMode() {
-        if (buttonCache != null) {
-            try {
-                return buttonCache.getCachedName().contains("英文");
-            } catch (AutomationException ignored) {
+    //    public static boolean isEnglishMode() {
+//        if (buttonCache != null) {
+//            try {
+//                return buttonCache.getCachedName().contains("英文");
+//            } catch (AutomationException ignored) {
+//
+//            }
+//        }
+//        return false;
+//    }
 
+    private static final int WM_IME_CONTROL = 0x0283;
+    private static final int IMC_GETOPENSTATUS = 0x0001;
+
+    public static boolean isEnglishMode() {
+        try {
+            InputMethodChecker.User32 user32 = InputMethodChecker.User32.INSTANCE;
+            InputMethodChecker.Imm32 imm32 = InputMethodChecker.Imm32.INSTANCE;
+//            User32.INSTANCE.
+
+            // 获取当前激活窗口句柄
+            WinDef.HWND activeWindow = User32.INSTANCE.GetForegroundWindow();
+            if (activeWindow == null) {
+                System.out.println("未找到激活窗口");
+                return false;
             }
+
+            // 获取输入法窗口句柄
+            Pointer imeWnd = imm32.ImmGetDefaultIMEWnd(activeWindow.getPointer());
+            if (imeWnd == null) {
+                System.out.println("未找到输入法窗口");
+                return true; // 英文输入法可能没有 IME 窗口
+            }
+
+
+            // 发送 IMC_GETOPENSTATUS 查询输入法是否打开
+            long result = user32.SendMessage(new WinDef.HWND(imeWnd), WM_IME_CONTROL, IMC_GETOPENSTATUS, 0);
+            //执行结束,释放上下文
+            Pointer hIMC = imm32.ImmGetContext(activeWindow);
+            if (hIMC != null) {
+                imm32.ImmReleaseContext(activeWindow, hIMC);
+            }
+
+            //
+            return result == 0;
+        } catch (Exception e) {
+//            e.printStackTrace();
+            System.out.println("获取输入法异常");
+            return false;
         }
-        return false;
     }
 
     private static void doDefaultAction(Element button) {
@@ -139,7 +186,7 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
             long nano_l = System.nanoTime() - startTimeNano_l;
             double milliseconds_l = nano_l / 1e6;
             String msFormatted_l = String.format("%.6f", milliseconds_l);
-            System.out.println("  执行时间: " + msFormatted_l + " ms");
+            LOG.info("  执行时间: " + msFormatted_l + " ms");
         }
     }
 }

@@ -51,7 +51,7 @@ public class IUIAutomationLegacyIAccessiblePatternConverter {
                         Function.ALT_CONVENTION);
                 return f.invokeInt(new Object[]{interfacePointer});
             }
-
+            @Override
             public int Release() {
                 Function f = Function.getFunction(vTable[2],
                         Function.ALT_CONVENTION);

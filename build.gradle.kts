@@ -19,6 +19,11 @@ kotlin {
     jvmToolchain(21)
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_21 // 与运行时环境对齐（例如 Java 21）
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
 // Configure project's dependencies
 repositories {
     maven { url = uri("https://maven.aliyun.com/repository/public") }
@@ -32,6 +37,7 @@ repositories {
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
+
     implementation("com.github.mmarquee:ui-automation:0.7.0") {
         exclude(group = "net.java.dev.jna",module= "jna")
         exclude(group = "net.java.dev.jna",module= "jna-platform")

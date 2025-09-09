@@ -23,16 +23,16 @@ This specific section is a source for the [plugin.xml](/src/main/resources/META-
 
 - `UI自动化模式（默认配置）`：
   - [x] 通过UIAutomation查找输入法按钮模拟点击切换输入法（性能稍慢约4ms）  
-    ![img_2.png](img.png)
-  - [x] 实现静默点击，不会切换焦点窗口，不会触发windows按钮悬停事件
-  - [x] 支持windows11
+  ![img_2.png](img.png)
+  - [x] 实现静默点击，不会切换焦点窗口，不会触发windows按钮悬停事件  
+  - [x] 支持windows11  
   - [ ] *待测试：Windows 10环境兼容性验证*
 
 
-- `模拟快捷键模式`：
+- `模拟快捷键模式`：  
   - [x] 通过模拟Shift键切换（兼容性最佳，性能最佳）  
-    ⚠️ *存在极短暂（约1ms）的按键模拟，可能引发微小干扰*  
-    ⌨️ *待开发：定向窗口句柄发送按键消息（避免全局触发）*
+      ⚠️ *存在极短暂（约1ms）的按键模拟，可能引发微小干扰*  
+      ⌨️ *待开发：定向窗口句柄发送按键消息（避免全局触发）*
 
 
 - `截图定位点击`：

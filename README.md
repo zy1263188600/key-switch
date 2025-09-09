@@ -1,52 +1,48 @@
-# key-switch
+# 🔑 key-switch —— 智能输入法自动切换工具
 
-![Build](https://github.com/zy1263188600/key-switch/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
+根据光标前的字符类型，自动切换中英文输入状态，让您的输入体验如行云流水般顺畅！
 
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Get familiar with the [template documentation][template].
-- [ ] Adjust the [pluginGroup](./gradle.properties) and [pluginName](./gradle.properties), as well as the [id](./src/main/resources/META-INF/plugin.xml) and [sources package](./src/main/kotlin).
-- [ ] Adjust the plugin description in `README` (see [Tips][docs:plugin-description])
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `MARKETPLACE_ID` in the above README badges. You can obtain it once the plugin is published to JetBrains Marketplace.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
-- [ ] Configure the [CODECOV_TOKEN](https://docs.codecov.com/docs/quick-start) secret for automated test coverage reports on PRs
+## 🚀 核心功能
+智能感知光标前的字符特征，精准触发输入法切换，告别手动切换的繁琐操作。
+## ⚠️ 注意事项
+暂时只支持windows，不支持mac、linux
 
-<!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
+## 📅 更新计划
+### ✅ 已完成
+1. **可视化切换方式配置**  
+   提供清爽直观的界面，自由选择最适合您的输入法切换方案
 
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
+2. **多模式切换引擎**
 
-To keep everything working, do not remove `<!-- ... -->` sections. 
-<!-- Plugin description end -->
-
-## Installation
-
-- Using the IDE built-in plugin system:
-  
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "key-switch"</kbd> >
-  <kbd>Install</kbd>
-  
-- Using JetBrains Marketplace:
-
-  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
-
-  You can also download the [latest release](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID/versions) from JetBrains Marketplace and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-
-- Manually:
-
-  Download the [latest release](https://github.com/zy1263188600/key-switch/releases/latest) and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+- `UI自动化模式（默认配置）`：
+  - [x] 通过UIAutomation查找输入法按钮模拟点击切换输入法（性能稍慢约4ms）  
+  ![img_2.png](img.png)
+  - [x] 实现静默点击，不会切换焦点窗口，不会触发windows按钮悬停事件  
+  - [x] 支持windows11  
+  - [ ] *待测试：Windows 10环境兼容性验证*
 
 
----
-Plugin based on the [IntelliJ Platform Plugin Template][template].
+- `模拟快捷键模式`：  
+  - [x] 通过模拟Shift键切换（兼容性最佳，性能最佳）  
+      ⚠️ *存在极短暂（约1ms）的按键模拟，可能引发微小干扰*  
+      ⌨️ *待开发：定向窗口句柄发送按键消息（避免全局触发）*
 
-[template]: https://github.com/JetBrains/intellij-platform-plugin-template
-[docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
+
+- `截图定位点击`：
+  - [ ] 使用截图定位按钮点击按键切换输入法（未实现但看起来性能比UIAutomation还会更差）
+
+
+- `使用windows接口进行切换`：
+  - [x] ~~IMM接口：微软已停止支持，win11无效，并且无法在同一个输入法内切换中英文模式，只支持布局切换~~
+  - [x] ~~TSF接口：直接切换中英文win11+微软拼音无效，可能因为各输入法内部实现不同，并且无法在同一个输入法内切换中英文模式，只支持布局切换~~
+    - 💡 PS:布局切换如下图，需要先在系统中添加另一种语言，为该语言添加键盘。等于直接切换输入法，例如从微软拼音切换为智能ABC。会失去常用输入法的提供的词库候选等功能。
+    - ![img_1.png](img_1.png)
+
+### 🚧 开发中
+| 功能模块          | 开发状态 | 特性描述                                                                 |
+|-------------------|----------|--------------------------------------------------------------------------|
+| 智能语境识别      | 规划中   | 基于语义场景自动切换中英文，让输入法拥有「读心术」                      |
+| 切换状态视觉反馈  | 设计阶段 | 在光标处显示优雅的输入法状态提示，如萤火微光般轻柔提醒                  |
+| 场景化预设配置    | 需求分析 | 为编程/文档/聊天等场景预置输入法方案，一键切换工作模式                  |
+| 智能习惯学习      | 实验阶段 | 记忆用户在特定位置的手动切换行为，逐步进化成懂您的输入伴侣              |
+| 截图定位引擎      | 预研中   | 通过图像识别定位按钮（性能可能低于UIAutomation，作为备选方案）          |

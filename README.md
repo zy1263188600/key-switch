@@ -1,7 +1,7 @@
 
 # 🔑 key-switch —— 智能输入法自动切换工具
 <!-- Plugin description -->
-**key-switch** 根据光标前的字符类型，自动切换中英文输入状态，让您的输入体验如行云流水般顺畅！彻底告别Shift！
+**key-switch** Automatically switch between Chinese and English input states based on the character type in front of the cursor, making your input experience as smooth as flowing clouds and water!
 <!-- Plugin description end -->
 ## 🚀 核心功能
 智能感知光标前的字符特征，精准触发输入法切换，告别手动切换的繁琐操作。

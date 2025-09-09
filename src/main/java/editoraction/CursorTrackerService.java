@@ -2,6 +2,7 @@ package editoraction;
 
 import com.intellij.openapi.CompositeDisposable;
 import com.intellij.openapi.components.Service;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -12,6 +13,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.editor.*;
 import enums.InputState;
+import inputmethod.InputMethodChecker2.UIAutomationSwitcher;
 import inputmethod.InputMethodSwitcher;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,6 +22,8 @@ import java.util.Map;
 
 @Service
 public final class CursorTrackerService {
+
+    private static final Logger LOG = Logger.getInstance(CursorTrackerService.class);
 
     // 存储每个编辑器最后输入的时间
     private final Map<Editor, Long> lastInputTimeMap = new HashMap<>();
@@ -66,16 +70,18 @@ public final class CursorTrackerService {
         int offset = editor.getCaretModel().getOffset();
         String prefixText = getPrefixText(editor, offset, 1);
         InputState chineseCharacter = isChineseCharacter(prefixText.charAt(0));
-        System.out.println("前一个字符：" + prefixText);
-        System.out.println("前一个字符状态：" + chineseCharacter);
+        LOG.debug("前一个字符：" + prefixText);
+        LOG.debug("前一个字符状态：" + chineseCharacter);
         InputState currentMode = InputMethodSwitcher.getCurrentMode();
-        System.out.println("输入法当前状态：" + currentMode);
+        LOG.debug("输入法当前状态：" + currentMode);
         if (!chineseCharacter.equals(currentMode)) {
-            System.out.println("切换");
+            LOG.debug("切换");
             InputMethodSwitcher.change();
+        } else {
+            LOG.debug("不切换");
         }
         InputState currentMode1 = InputMethodSwitcher.getCurrentMode();
-        System.out.println("输入法最终状态：" + currentMode1);
+        LOG.debug("输入法最终状态：" + currentMode1);
     }
 
     //判断是中文还是英文

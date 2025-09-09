@@ -2,12 +2,83 @@
     <id>com.github.zy1263188600.keyswitch</id>
     <name>key-switch</name>
     <vendor>zy1263188600</vendor>
+    <description><![CDATA[
+     <description>
+<article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading" dir="auto"><h1 tabindex="-1" class="heading-element" dir="auto">🔑 key-switch —— 智能输入法自动切换工具</h1><a id="user-content--key-switch--智能输入法自动切换工具" class="anchor" aria-label="Permalink: 🔑 key-switch —— 智能输入法自动切换工具" href="#-key-switch--智能输入法自动切换工具"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+
+<p dir="auto">根据光标前的字符类型，自动切换中英文输入状态，让您的输入体验如行云流水般顺畅！</p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">🚀 核心功能</h2><a id="user-content--核心功能" class="anchor" aria-label="Permalink: 🚀 核心功能" href="#-核心功能"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">智能感知光标前的字符特征，精准触发输入法切换，告别手动切换的繁琐操作。</p>
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> 注意事项</h2><a id="user-content-️-注意事项" class="anchor" aria-label="Permalink: ⚠️ 注意事项" href="#️-注意事项"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">暂时只支持windows，不支持mac、linux</p>
+
+<div class="markdown-heading" dir="auto"><h2 tabindex="-1" class="heading-element" dir="auto">📅 更新计划</h2><a id="user-content--更新计划" class="anchor" aria-label="Permalink: 📅 更新计划" href="#-更新计划"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">✅ 已完成</h3><a id="user-content--已完成" class="anchor" aria-label="Permalink: ✅ 已完成" href="#-已完成"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ol dir="auto">
+<li>
+<p dir="auto"><strong>可视化切换方式配置</strong><br>
+提供清爽直观的界面，自由选择最适合您的输入法切换方案</p>
+</li>
+<li>
+<p dir="auto"><strong>多模式切换引擎</strong></p>
+</li>
+</ol>
+<ul dir="auto">
+<li>
+<p dir="auto"><code>UI自动化模式（默认配置）</code>：</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked=""> 通过UIAutomation查找输入法按钮模拟点击切换输入法（性能稍慢约4ms）<br>
+<a target="_blank" rel="noopener noreferrer" href="/zy1263188600/key-switch/blob/main/img.png"><img src="/zy1263188600/key-switch/raw/main/img.png" alt="img_2.png" style="max-width: 100%;"></a></li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked=""> 实现静默点击，不会切换焦点窗口，不会触发windows按钮悬停事件</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked=""> 支持windows11</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> <em>待测试：Windows 10环境兼容性验证</em></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><code>模拟快捷键模式</code>：</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked=""> 通过模拟Shift键切换（兼容性最佳，性能最佳）<br>
+<g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> <em>存在极短暂（约1ms）的按键模拟，可能引发微小干扰</em><br>
+⌨️ <em>待开发：定向窗口句柄发送按键消息（避免全局触发）</em></li>
+</ul>
+</li>
+<li>
+<p dir="auto"><code>截图定位点击</code>：</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> 使用截图定位按钮点击按键切换输入法（未实现但看起来性能比UIAutomation还会更差）</li>
+</ul>
+</li>
+<li>
+<p dir="auto"><code>使用windows接口进行切换</code>：</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked=""> <del>IMM接口：微软已停止支持，win11无效，并且无法在同一个输入法内切换中英文模式，只支持布局切换</del></li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Completed task" checked=""> <del>TSF接口：直接切换中英文win11+微软拼音无效，可能因为各输入法内部实现不同，并且无法在同一个输入法内切换中英文模式，只支持布局切换</del>
+<ul dir="auto">
+<li>💡 PS:布局切换如下图，需要先在系统中添加另一种语言，为该语言添加键盘。等于直接切换输入法，例如从微软拼音切换为智能ABC。会失去常用输入法的提供的词库候选等功能。</li>
+<li><a target="_blank" rel="noopener noreferrer" href="/zy1263188600/key-switch/blob/main/img_1.png"><img src="/zy1263188600/key-switch/raw/main/img_1.png" alt="img_1.png" style="max-width: 100%;"></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="markdown-heading" dir="auto"><h3 tabindex="-1" class="heading-element" dir="auto">🚧 开发中</h3><a id="user-content--开发中" class="anchor" aria-label="Permalink: 🚧 开发中" href="#-开发中"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<ul dir="auto">
+<li><code>智能语境识别</code>：
+基于语义场景自动切换中英文，让输入法拥有「读心术」</li>
+<li><code>切换状态视觉反馈</code>：
+在光标处显示优雅的输入法状态提示，如萤火微光般轻柔提醒</li>
+<li><code>场景化预设配置</code>：
+为注释/代码编辑区/git commit等场景预置输入法方案，让输入法更得心应手，完全告别Shift</li>
+<li><code>智能习惯学习</code>：
+记忆用户在特定位置的手动切换行为，逐步进化成懂您的输入伴侣</li>
+</ul>
+</article>
+</description>
+    ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
     <depends>com.intellij.modules.java</depends>
-
-<!--    <resource-bundle>messages.MyBundle</resource-bundle>-->
 
     <extensions defaultExtensionNs="com.intellij">
         <postStartupActivity implementation="editoraction.PluginStartup"/>

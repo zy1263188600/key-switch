@@ -106,17 +106,6 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
         return isEnglishMode() ? InputState.ENGLISH : InputState.CHINESE;
     }
 
-    //    public static boolean isEnglishMode() {
-//        if (buttonCache != null) {
-//            try {
-//                return buttonCache.getCachedName().contains("英文");
-//            } catch (AutomationException ignored) {
-//
-//            }
-//        }
-//        return false;
-//    }
-
     private static final int WM_IME_CONTROL = 0x0283;
     private static final int IMC_GETOPENSTATUS = 0x0001;
 

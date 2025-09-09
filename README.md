@@ -1,12 +1,13 @@
-<!-- Plugin description -->
-# 🔑 key-switch —— 智能输入法自动切换工具
 
+# 🔑 key-switch —— 智能输入法自动切换工具
+<!-- Plugin description -->
 根据光标前的字符类型，自动切换中英文输入状态，让您的输入体验如行云流水般顺畅！
 
 ## 🚀 核心功能
 智能感知光标前的字符特征，精准触发输入法切换，告别手动切换的繁琐操作。
 ## ⚠️ 注意事项
 暂时只支持windows，不支持mac、linux
+<!-- Plugin description end -->
 
 ## 📅 更新计划
 ### ✅ 已完成
@@ -47,4 +48,3 @@
   为注释/代码编辑区/git commit等场景预置输入法方案，让输入法更得心应手，完全告别Shift
 - `智能习惯学习`：
   记忆用户在特定位置的手动切换行为，逐步进化成懂您的输入伴侣
-<!-- Plugin description end -->

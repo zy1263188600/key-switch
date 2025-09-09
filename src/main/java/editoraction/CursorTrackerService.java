@@ -1,27 +1,22 @@
 package editoraction;
 
 import com.intellij.openapi.CompositeDisposable;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.event.*;
+import com.intellij.openapi.editor.event.CaretEvent;
+import com.intellij.openapi.editor.event.CaretListener;
+import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.editor.event.EditorEventMulticaster;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.event.*;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.jediterm.core.input.KeyEvent;
 import enums.InputState;
 import inputmethod.InputMethodSwitcher;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public final class CursorTrackerService {
@@ -63,56 +58,6 @@ public final class CursorTrackerService {
         }, composite);
     }
 
-    // 注册全局光标监听器
-//    public CursorTrackerService() {
-//        CompositeDisposable composite = new CompositeDisposable();
-//        EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
-//        eventMulticaster.addCaretListener(
-//                new CaretListener() {
-//                    @Override
-//                    public void caretPositionChanged(@NotNull CaretEvent event) {
-//                        Editor editor = event.getEditor();
-//                        long currentTime = System.currentTimeMillis();
-//
-//                        long lastInputTime = lastInputTimeMap.getOrDefault(editor, new AtomicLong(0)).get();
-//                        // 忽略最近发生的输入事件
-//                        if (currentTime - lastInputTime > EVENT_THRESHOLD) {
-//                            handleCursorMovement(event);
-//                        } else {
-//                            System.out.println("光标连续变动");
-//                        }
-//                        lastInputTimeMap.computeIfAbsent(editor, k -> new AtomicLong(0)).set(System.currentTimeMillis());
-//                    }
-//                }
-//                , composite);
-//        eventMulticaster.addEditorMouseListener(
-//                new EditorMouseListener() {
-//                    @Override
-//                    public void mousePressed(@NotNull EditorMouseEvent e) {
-//                        // 更新鼠标操作时间戳
-//                        lastInputTimeMap.computeIfAbsent(e.getEditor(), k -> new AtomicLong(0))
-//                                .set(0); // 重置为0表示非输入事件
-//                    }
-//                }
-//                , composite);
-//        EditorFactory.getInstance().addEditorFactoryListener(new EditorFactoryListener() {
-//            @Override
-//            public void editorCreated(@NotNull EditorFactoryEvent event) {
-//                Editor editor = event.getEditor();
-//                editor.getDocument().addDocumentListener(new DocumentListener() {
-//                    @Override
-//                    public void documentChanged(@NotNull DocumentEvent event) {
-//                        // 更新最后输入时间戳
-//                        lastInputTimeMap.computeIfAbsent(editor, k -> new AtomicLong(0))
-//                                .set(System.currentTimeMillis());
-//                    }
-//                });
-//            }
-//        }, composite);
-//
-//        composite.dispose();
-//    }
-
     private void handleCursorMovement(CaretEvent event) {
         Editor editor = getFocusedEditor();
         if (editor == null || editor != event.getEditor()) {
@@ -140,7 +85,6 @@ public final class CursorTrackerService {
 
 //        boolean b = (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0xFFE0 && c <= 0xFFEE);
         boolean b = Character.UnicodeBlock.of(c) == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS;
-        ;
         if (b) {
             return InputState.CHINESE;
         } else {

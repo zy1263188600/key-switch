@@ -27,11 +27,6 @@ public class InputMethodChecker implements InputMethodSwitchStrategy {
         } catch (Exception e) {
             System.out.println("imm加载失败");
         }
-//        JnaLoader.load(logger);
-////        JnaLoader.load
-//        System.out.println("Jna加载了吗"+JnaLoader.isLoaded());
-//       System.out.println("InputMethodChecker!!!!!");
-//        System.out.println("InputMethodChecker!!!!!");
     }
 
     // Imm32.dll 接口：用于获取输入法窗口句柄

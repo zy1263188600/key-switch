@@ -57,24 +57,4 @@ public interface IUIAutomationLegacyIAccessiblePattern extends IUnknown {
      *         an HRESULT error code.
      */
     int getCurrentName(PointerByReference pszName);
-
-    //  int getCurrentValue(PointerByReference pszValue);
-    //  int getCurrentDescription(PointerByReference pszDescription);
-    //  int getCurrentRole(PointerByReference pdwRole);
-    //  int getCurrentState(PointerByReference pdwState);
-    //  int getCurrentHelp(PointerByReference pszHelp);
-    //  int getCurrentKeyboardShortcut(PointerByReference pszKeyboardShortcut);
-    //  int getCurrentSelection(PointerByReference pvarSelectedChildren);
-    //  int getCurrentDefaultAction(PointerByReference pszDefaultAction);
-    // int getCachedChildId(PointerByReference pRetVal);
-    // int getCachedName(PointerByReference pszName);
-    // int getCachedValue(PointerByReference pszValue);
-    // int getCachedDescription(PointerByReference pszDescription);
-    // int getCachedRole(PointerByReference pdwRole);
-    // int getCachedState(PointerByReference pdwState);
-    // int getCachedHelp(PointerByReference pszHelp);
-    // int getCachedKeyboardShortcut(PointerByReference pszKeyboardShortcut);
-    // int getCachedSelection(PointerByReference pvarSelectedChildren);
-    // int getCachedDefaultAction(PointerByReference pszDefaultAction);
-    // int getIAccessible(PointerByReference ppAccessible);
 }

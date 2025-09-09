@@ -5,11 +5,9 @@ import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.Variant;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.ptr.PointerByReference;
-import editoraction.EditorContextAction;
 import enums.InputState;
 import inputmethod.InputMethodChecker1.InputMethodChecker;
 import inputmethod.InputMethodSwitchStrategy;
-import mmarquee.automation.AutomationException;
 import mmarquee.automation.Element;
 import mmarquee.automation.UIAutomation;
 import mmarquee.uiautomation.IUIAutomationElement;
@@ -22,7 +20,7 @@ import java.util.List;
 
 public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
 
-    private static final Logger LOG = Logger.getInstance(EditorContextAction.class);
+    private static final Logger LOG = Logger.getInstance(UIAutomationSwitcher.class);
 
     public static final int SUCCESS = 0;
     public static final int COM_INIT_FAILED_STA = 1;

@@ -1,8 +1,7 @@
 package editoraction;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project; 
-import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.project.Project;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import org.jetbrains.annotations.NotNull;

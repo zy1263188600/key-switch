@@ -23,8 +23,6 @@ public class PluginSettingsConfigurable implements Configurable {
     private JComboBox<String> strategyComboBox;
     private JTextField enColorField;
     private JTextField zhColorField;
-//    private JButton enColorBtn;
-//    private JButton zhColorBtn;
 
     private final SettingsState state;
 
@@ -43,8 +41,8 @@ public class PluginSettingsConfigurable implements Configurable {
         JPanel strategyPanel = createStrategyPanel();
         settingsPanel.add(strategyPanel);
         // 2. 光标颜色配置组件
-        settingsPanel.add(createColorConfigPanel(" 英文光标颜色:", "enColor"));
-        settingsPanel.add(createColorConfigPanel(" 中文光标颜色:", "zhColor"));
+//        settingsPanel.add(createColorConfigPanel(" 英文光标颜色:", "enColor"));
+//        settingsPanel.add(createColorConfigPanel(" 中文光标颜色:", "zhColor"));
 
         // 3. 操作按钮
         JPanel buttonPanel = createButtonPanel();

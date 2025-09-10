@@ -20,8 +20,8 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
     public String strategyClass = "UIAutomationSwitcher";
 
     // 新增光标颜色配置
-    public Color englishCursorColor = JBColor.RED;
-    public Color chineseCursorColor = JBColor.BLUE;
+//    public Color englishCursorColor = JBColor.RED;
+//    public Color chineseCursorColor = JBColor.BLUE;
 
     @Nullable
     @Override

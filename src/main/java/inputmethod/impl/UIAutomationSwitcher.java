@@ -1,4 +1,4 @@
-package inputmethod.InputMethodChecker2;
+package inputmethod.impl;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.User32;
@@ -6,7 +6,6 @@ import com.sun.jna.platform.win32.Variant;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.ptr.PointerByReference;
 import enums.InputState;
-import inputmethod.InputMethodChecker1.InputMethodChecker;
 import inputmethod.InputMethodSwitchStrategy;
 import mmarquee.automation.Element;
 import mmarquee.automation.UIAutomation;
@@ -109,9 +108,8 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
 
     public static boolean isEnglishMode() {
         try {
-            InputMethodChecker.User32 user32 = InputMethodChecker.User32.INSTANCE;
-            InputMethodChecker.Imm32 imm32 = InputMethodChecker.Imm32.INSTANCE;
-//            User32.INSTANCE.
+            KeyboardSwitcher.User32 user32 = KeyboardSwitcher.User32.INSTANCE;
+            KeyboardSwitcher.Imm32 imm32 = KeyboardSwitcher.Imm32.INSTANCE;
 
             // 获取当前激活窗口句柄
             WinDef.HWND activeWindow = User32.INSTANCE.GetForegroundWindow();
@@ -127,7 +125,6 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
                 return true; // 英文输入法可能没有 IME 窗口
             }
 
-
             // 发送 IMC_GETOPENSTATUS 查询输入法是否打开
             long result = user32.SendMessage(new WinDef.HWND(imeWnd), WM_IME_CONTROL, IMC_GETOPENSTATUS, 0);
             //执行结束,释放上下文
@@ -136,10 +133,8 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
                 imm32.ImmReleaseContext(activeWindow, hIMC);
             }
 
-            //
             return result == 0;
         } catch (Exception e) {
-//            e.printStackTrace();
             System.out.println("获取输入法异常");
             return false;
         }

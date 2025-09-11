@@ -3,14 +3,14 @@ package inputmethod;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import inputmethod.InputMethodChecker1.InputMethodChecker;
-import inputmethod.InputMethodChecker2.UIAutomationSwitcher;
+import inputmethod.impl.KeyboardSwitcher;
+import inputmethod.impl.UIAutomationSwitcher;
 
 public class StrategyFactory {
     private static final Map<String, Supplier<InputMethodSwitchStrategy>> STRATEGIES =
         Map.of( 
             "UIAutomationSwitcher", UIAutomationSwitcher::new,
-            "InputMethodChecker", InputMethodChecker::new
+            "KeyboardSwitcher", KeyboardSwitcher::new
         );
  
     public static InputMethodSwitchStrategy createStrategy(String className) {

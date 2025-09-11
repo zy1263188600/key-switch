@@ -1,4 +1,4 @@
-package inputmethod.InputMethodChecker1;
+package inputmethod.impl;
 
 import enums.InputState;
 
@@ -15,19 +15,10 @@ import static com.sun.jna.platform.win32.WinUser.KEYBDINPUT.KEYEVENTF_KEYUP;
 import static com.sun.jna.platform.win32.WinUser.VK_LSHIFT;
 
 
-public class InputMethodChecker implements InputMethodSwitchStrategy {
+public class KeyboardSwitcher implements InputMethodSwitchStrategy {
 
     private static long lastPressTime = 0;
     private static final long MIN_PRESS_INTERVAL_MS = 100;
-
-    static {
-        try {
-            Native.load("imm32", Imm32.class);
-            System.out.println("imm加载成功!!!!!!");
-        } catch (Exception e) {
-            System.out.println("imm加载失败");
-        }
-    }
 
     public interface Imm32 extends Library {
 

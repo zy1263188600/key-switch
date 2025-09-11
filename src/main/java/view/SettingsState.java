@@ -4,12 +4,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.ui.Gray;
-import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.awt.*;
 
 @State(
         name = "InputMethodSettings",
@@ -17,11 +13,9 @@ import java.awt.*;
 )
 public class SettingsState implements PersistentStateComponent<SettingsState> {
     // 输入法切换策略
-    public String strategyClass = "UIAutomationSwitcher";
-
-    // 新增光标颜色配置
-//    public Color englishCursorColor = JBColor.RED;
-//    public Color chineseCursorColor = JBColor.BLUE;
+    public String inputSwitchStrategyClass = "UIAutomationSwitcher";
+    // 切换输入法时的提示策略
+    public String switchingStrategyClass = "CursorColorStrategy";
 
     @Nullable
     @Override
@@ -31,7 +25,7 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
 
     @Override
     public void loadState(@NotNull SettingsState state) {
-        this.strategyClass = state.strategyClass;
+        this.inputSwitchStrategyClass = state.inputSwitchStrategyClass;
     }
 
     public static SettingsState getInstance() {

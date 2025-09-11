@@ -13,7 +13,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.editor.*;
 import enums.InputState;
-import inputmethod.InputMethodChecker2.UIAutomationSwitcher;
 import inputmethod.InputMethodSwitcher;
 import org.jetbrains.annotations.NotNull;
 

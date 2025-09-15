@@ -178,33 +178,7 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
     }
 
     public static boolean isEnglishMode() {
-        try {
-            KeyboardSwitcher.User32 user32 = KeyboardSwitcher.User32.INSTANCE;
-            KeyboardSwitcher.Imm32 imm32 = KeyboardSwitcher.Imm32.INSTANCE;
-
-            WinDef.HWND activeWindow = User32.INSTANCE.GetForegroundWindow();
-            if (activeWindow == null) {
-                LOG.debug("No  active window found");
-                return false;
-            }
-
-            Pointer imeWnd = imm32.ImmGetDefaultIMEWnd(activeWindow.getPointer());
-            if (imeWnd == null) {
-                LOG.debug("No  IME window found");
-                return true;
-            }
-
-            long result = user32.SendMessage(new WinDef.HWND(imeWnd), WM_IME_CONTROL, IMC_GETOPENSTATUS, 0);
-            Pointer hIMC = imm32.ImmGetContext(activeWindow);
-            if (hIMC != null) {
-                imm32.ImmReleaseContext(activeWindow, hIMC);
-            }
-
-            return result == 0;
-        } catch (Exception e) {
-            LOG.warn("Error  detecting input method state", e);
-            return false;
-        }
+        return KeyboardSwitcher.isEnglishMode();
     }
 
     private void doDefaultAction(Element button) {

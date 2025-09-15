@@ -1,5 +1,6 @@
 package inputmethod.impl;
 
+import com.intellij.openapi.diagnostic.Logger;
 import enums.InputState;
 
 import com.sun.jna.Library;
@@ -16,6 +17,8 @@ import static com.sun.jna.platform.win32.WinUser.VK_LSHIFT;
 
 
 public class KeyboardSwitcher implements InputMethodSwitchStrategy {
+
+    private static final Logger LOG = Logger.getInstance(KeyboardSwitcher.class);
 
     private static long lastPressTime = 0;
     private static final long MIN_PRESS_INTERVAL_MS = 100;
@@ -59,13 +62,13 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
 
             HWND activeWindow = user32.GetForegroundWindow();
             if (activeWindow == null) {
-                System.out.println("未找到激活窗口");
+                LOG.info("未找到激活窗口");
                 return false;
             }
 
             Pointer imeWnd = imm32.ImmGetDefaultIMEWnd(activeWindow.getPointer());
             if (imeWnd == null) {
-                System.out.println("未找到输入法窗口");
+                LOG.info("未找到输入法窗口");
                 return true; // 英文输入法可能没有 IME 窗口
             }
 
@@ -77,7 +80,7 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
 
             return result == 0;
         } catch (Exception e) {
-            System.out.println("获取输入法异常");
+            LOG.info("获取输入法异常");
             return false;
         }
     }
@@ -92,12 +95,12 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
 
         // 按下左 Shift
         user32.keybd_event((byte) VK_LSHIFT, (byte) 0, 0, 0);
-        System.out.println("按下 Shift");
+        LOG.info("按下 Shift");
 
 
         // 释放左 Shift
         user32.keybd_event((byte) VK_LSHIFT, (byte) 0, KEYEVENTF_KEYUP, 0);
-        System.out.println("释放 Shift");
+        LOG.info("释放 Shift");
         lastPressTime = now;
 
     }
@@ -113,7 +116,7 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
             long nano_l = System.nanoTime()  - startTimeNano_l;
             double milliseconds_l = nano_l / 1e6;
             String msFormatted_l = String.format("%.6f",  milliseconds_l);
-            System.out.println("  执行时间: " + msFormatted_l + " ms");
+            LOG.info("  执行时间: " + msFormatted_l + " ms");
         }
     }
 

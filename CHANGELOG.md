@@ -4,4 +4,4 @@
 
 ## [Unreleased]
 ### Added
-- 修复输入策略界面无法展示的BUG
+- UIAutomation模式添加重试机制，List<Element>缓存失效时重新获取

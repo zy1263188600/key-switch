@@ -7,6 +7,7 @@ import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.ptr.PointerByReference;
 import enums.InputState;
 import inputmethod.InputMethodSwitchStrategy;
+import mmarquee.automation.AutomationException;
 import mmarquee.automation.Element;
 import mmarquee.automation.UIAutomation;
 import mmarquee.uiautomation.IUIAutomationElement;
@@ -20,82 +21,155 @@ import java.util.List;
 public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
 
     private static final Logger LOG = Logger.getInstance(UIAutomationSwitcher.class);
+    private static final int WM_IME_CONTROL = 0x0283;
+    private static final int IMC_GETOPENSTATUS = 0x0001;
+    private static final int MAX_RETRY_COUNT = 1;
 
-    public static final int SUCCESS = 0;
-    public static final int COM_INIT_FAILED_STA = 1;
-    public static final int AUTOMATION_CREATE_FAILED = 2;
-    public static final int TRAY_WINDOW_NOT_FOUND = 3;
-    public static final int ELEMENT_FROM_HANDLE_FAILED = 4;
-    public static final int BUTTONS_NOT_FOUND = 5;
-    public static final int BUTTON_INVOKE_FAILED = 6;
-    public static final int NO_VALID_BUTTON = 7;
+    public enum ErrorCode {
+        COM_INIT_FAILED_STA,
+        AUTOMATION_CREATE_FAILED,
+        TRAY_WINDOW_NOT_FOUND,
+        ELEMENT_FROM_HANDLE_FAILED,
+        BUTTONS_NOT_FOUND,
+        BUTTON_INVOKE_FAILED,
+        NO_VALID_BUTTON
+    }
 
-    public static List<Element> buttons;
-    public static Element buttonCache;
+    public static class UIAutomationSwitcherException extends RuntimeException {
+        private final ErrorCode errorCode;
 
-    public static int clickInputMethodButton() {
-        try {
-            UIAutomation automation = UIAutomation.getInstance();
-            WinDef.HWND hTrayWnd = User32.INSTANCE.FindWindow("Shell_TrayWnd", null);
-            if (hTrayWnd == null) {
-                return TRAY_WINDOW_NOT_FOUND;
-            }
-            Element root = automation.getElementFromHandle(hTrayWnd);
-            if (root == null) {
-                return ELEMENT_FROM_HANDLE_FAILED;
-            }
-            Variant.VARIANT.ByValue variant = new Variant.VARIANT.ByValue();
-            variant.setValue(3, new WinDef.LONG(50000L));
-            PointerByReference propertyCondition = automation.createPropertyCondition(30003, variant);
-
-            if (buttons == null) {
-                long startTimeNano_l = System.nanoTime();
-                try {
-                    buttons = root.findAll(new TreeScope(TreeScope.DESCENDANTS), propertyCondition);
-                } finally {
-                    long nano_l = System.nanoTime() - startTimeNano_l;
-                    double milliseconds_l = nano_l / 1e6;
-                    String msFormatted_l = String.format("%.6f", milliseconds_l);
-                    System.out.println("findAll执行时间: " + msFormatted_l + " ms");
-                }
-                if (buttons == null || buttons.isEmpty()) {
-                    return BUTTONS_NOT_FOUND;
-                }
-            }
-
-            if (buttons.size() > 5) {
-                Element element = buttons.get(buttons.size() - 5);
-                String name = element.getName();
-                if (name != null && isInputMethodButton(name)) {
-                    try {
-                        doDefaultAction(element);
-                        return SUCCESS;
-                    } catch (Exception e) {
-                        return BUTTON_INVOKE_FAILED;
-                    }
-                }
-            }
-            // 逆向遍历按钮 输入法一般都在倒数位次 会快一点
-            for (int i = buttons.size() - 1; i >= 0; i--) {
-                Element element = buttons.get(i);
-                String name = element.getName();
-                if (name != null && isInputMethodButton(name)) {
-                    try {
-                        doDefaultAction(element);
-                        return SUCCESS;
-                    } catch (Exception e) {
-                        return BUTTON_INVOKE_FAILED;
-                    }
-                }
-            }
-            return NO_VALID_BUTTON;
-
-        } catch (Exception e) {
-            if (e.getMessage() != null && e.getMessage().contains("RPC_E_CHANGED_MODE")) {
-                return COM_INIT_FAILED_STA;
-            }
-            return AUTOMATION_CREATE_FAILED;
+        public UIAutomationSwitcherException(ErrorCode errorCode, String message) {
+            super(message);
+            this.errorCode = errorCode;
         }
+
+        public UIAutomationSwitcherException(ErrorCode errorCode, String message, Throwable cause) {
+            super(message, cause);
+            this.errorCode = errorCode;
+        }
+
+        public ErrorCode getErrorCode() {
+            return errorCode;
+        }
+    }
+
+    private List<Element> buttons;
+
+    private void clickInputMethodButton() {
+        int retryCount = 0;
+        UIAutomation automation;
+
+        while (retryCount <= MAX_RETRY_COUNT) {
+            if (retryCount == 1) {
+                LOG.info("RETRY_COUNT:" + retryCount);
+            }
+            try {
+                automation = UIAutomation.getInstance();
+                WinDef.HWND hTrayWnd = User32.INSTANCE.FindWindow("Shell_TrayWnd", null);
+                if (hTrayWnd == null) {
+                    throw new UIAutomationSwitcherException(
+                            ErrorCode.TRAY_WINDOW_NOT_FOUND,
+                            "Tray window not found"
+                    );
+                }
+
+                Element root = automation.getElementFromHandle(hTrayWnd);
+                if (root == null) {
+                    throw new UIAutomationSwitcherException(
+                            ErrorCode.ELEMENT_FROM_HANDLE_FAILED,
+                            "Failed to get element from handle"
+                    );
+                }
+
+                Variant.VARIANT.ByValue variant = new Variant.VARIANT.ByValue();
+                variant.setValue(3, new WinDef.LONG(50000L));
+                PointerByReference propertyCondition = automation.createPropertyCondition(30003, variant);
+
+                if (buttons == null) {
+                    long startTimeNano = System.nanoTime();
+                    try {
+                        buttons = root.findAll(new TreeScope(TreeScope.DESCENDANTS), propertyCondition);
+                    } finally {
+                        long durationNano = System.nanoTime() - startTimeNano;
+                        double milliseconds = durationNano / 1e6;
+                        LOG.debug("findAll  execution time: " + String.format("%.6f", milliseconds) + " ms");
+                    }
+
+                    if (buttons == null || buttons.isEmpty()) {
+                        throw new UIAutomationSwitcherException(
+                                ErrorCode.BUTTONS_NOT_FOUND,
+                                "No buttons found"
+                        );
+                    }
+                }
+
+                if (buttons.size() > 5) {
+                    Element element = buttons.get(buttons.size() - 5);
+                    if (isValidInputMethodButton(element)) {
+                        doDefaultAction(element);
+                        return;
+                    }
+                }
+
+                for (int i = buttons.size() - 1; i >= 0; i--) {
+                    Element element = buttons.get(i);
+                    if (isValidInputMethodButton(element)) {
+                        doDefaultAction(element);
+                        return;
+                    }
+                }
+
+                throw new UIAutomationSwitcherException(
+                        ErrorCode.NO_VALID_BUTTON,
+                        "No valid input method button found"
+                );
+
+            } catch (Exception e) {
+                handleException(e, retryCount);
+                retryCount++;
+            }
+        }
+
+        throw new UIAutomationSwitcherException(
+                ErrorCode.AUTOMATION_CREATE_FAILED,
+                "Operation failed after " + MAX_RETRY_COUNT + " retries"
+        );
+    }
+
+    private void handleException(Exception e, int retryCount) {
+        if (e instanceof UIAutomationSwitcherException) {
+            throw (UIAutomationSwitcherException) e;
+        }
+
+        String message = e.getMessage();
+        if (message != null) {
+            if (message.contains("RPC_E_CHANGED_MODE")) {
+                throw new UIAutomationSwitcherException(
+                        ErrorCode.COM_INIT_FAILED_STA,
+                        "COM initialization failed in STA mode",
+                        e
+                );
+            } else if (message.contains("0x80040201")) {
+                LOG.warn("Taskbar  resource invalid, retrying... Attempt: " + (retryCount + 1));
+                buttons = null;  // Clear cache for retry
+                return;  // Continue to next retry
+            }
+        }
+
+        throw new UIAutomationSwitcherException(
+                ErrorCode.AUTOMATION_CREATE_FAILED,
+                "Unexpected error during automation",
+                e
+        );
+    }
+
+    private boolean isValidInputMethodButton(Element element) throws AutomationException {
+        String name = element.getName();
+        return name != null && (
+                name.contains("输入指示器") ||
+                        name.contains("输入模式") ||
+                        name.contains("语言栏")
+        );
     }
 
     @Override
@@ -103,31 +177,24 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
         return isEnglishMode() ? InputState.ENGLISH : InputState.CHINESE;
     }
 
-    private static final int WM_IME_CONTROL = 0x0283;
-    private static final int IMC_GETOPENSTATUS = 0x0001;
-
     public static boolean isEnglishMode() {
         try {
             KeyboardSwitcher.User32 user32 = KeyboardSwitcher.User32.INSTANCE;
             KeyboardSwitcher.Imm32 imm32 = KeyboardSwitcher.Imm32.INSTANCE;
 
-            // 获取当前激活窗口句柄
             WinDef.HWND activeWindow = User32.INSTANCE.GetForegroundWindow();
             if (activeWindow == null) {
-                System.out.println("未找到激活窗口");
+                LOG.debug("No  active window found");
                 return false;
             }
 
-            // 获取输入法窗口句柄
             Pointer imeWnd = imm32.ImmGetDefaultIMEWnd(activeWindow.getPointer());
             if (imeWnd == null) {
-                System.out.println("未找到输入法窗口");
-                return true; // 英文输入法可能没有 IME 窗口
+                LOG.debug("No  IME window found");
+                return true;
             }
 
-            // 发送 IMC_GETOPENSTATUS 查询输入法是否打开
             long result = user32.SendMessage(new WinDef.HWND(imeWnd), WM_IME_CONTROL, IMC_GETOPENSTATUS, 0);
-            //执行结束,释放上下文
             Pointer hIMC = imm32.ImmGetContext(activeWindow);
             if (hIMC != null) {
                 imm32.ImmReleaseContext(activeWindow, hIMC);
@@ -135,40 +202,39 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
 
             return result == 0;
         } catch (Exception e) {
-            System.out.println("获取输入法异常");
+            LOG.warn("Error  detecting input method state", e);
             return false;
         }
     }
 
-    private static void doDefaultAction(Element button) {
-        buttonCache = button;
-        IUIAutomationElement element = button.getElement();
-        PointerByReference legacyPatternRef = new PointerByReference();
-        element.getCurrentPattern(10018, legacyPatternRef);
-        IUIAutomationLegacyIAccessiblePattern legacy = IUIAutomationLegacyIAccessiblePatternConverter.pointerToInterface(legacyPatternRef);
-        legacy.doDefaultAction();
-    }
-
-    private static boolean isInputMethodButton(String name) {
-        return name.contains(" 输入指示器") ||
-                name.contains(" 输入模式") ||
-                name.contains(" 语言栏") ||
-                name.contains("ENG") ||
-                name.contains("CHS") ||
-                name.contains(" 中") ||
-                name.contains(" 英");
+    private void doDefaultAction(Element button) {
+        try {
+            IUIAutomationElement element = button.getElement();
+            PointerByReference legacyPatternRef = new PointerByReference();
+            element.getCurrentPattern(10018, legacyPatternRef);
+            IUIAutomationLegacyIAccessiblePattern legacy =
+                    IUIAutomationLegacyIAccessiblePatternConverter.pointerToInterface(legacyPatternRef);
+            legacy.doDefaultAction();
+        } catch (Exception e) {
+            throw new UIAutomationSwitcherException(
+                    ErrorCode.BUTTON_INVOKE_FAILED,
+                    "Failed to invoke button action",
+                    e
+            );
+        }
     }
 
     @Override
     public void change() {
-        long startTimeNano_l = System.nanoTime();
+        long startTimeNano = System.nanoTime();
         try {
             clickInputMethodButton();
+        } catch (UIAutomationSwitcherException e) {
+            LOG.error("Input  method switch failed: " + e.getErrorCode(), e);
         } finally {
-            long nano_l = System.nanoTime() - startTimeNano_l;
-            double milliseconds_l = nano_l / 1e6;
-            String msFormatted_l = String.format("%.6f", milliseconds_l);
-            LOG.info("  执行时间: " + msFormatted_l + " ms");
+            long durationNano = System.nanoTime() - startTimeNano;
+            double milliseconds = durationNano / 1e6;
+            LOG.info("Execution  time: " + String.format("%.6f", milliseconds) + " ms");
         }
     }
 }

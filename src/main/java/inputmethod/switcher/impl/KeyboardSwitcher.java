@@ -1,4 +1,4 @@
-package inputmethod.impl;
+package inputmethod.switcher.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
 import enums.InputState;
@@ -9,7 +9,7 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.WinDef.HWND;
 import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
-import inputmethod.InputMethodSwitchStrategy;
+import inputmethod.switcher.InputMethodSwitchStrategy;
 
 
 import static com.sun.jna.platform.win32.WinUser.KEYBDINPUT.KEYEVENTF_KEYUP;

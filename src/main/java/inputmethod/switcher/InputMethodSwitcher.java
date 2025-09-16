@@ -1,7 +1,7 @@
-package inputmethod;
+package inputmethod.switcher;
 
 import enums.InputState;
-import inputmethod.impl.UIAutomationSwitcher;
+import inputmethod.switcher.impl.UIAutomationSwitcher;
 import view.SettingsState;
 
 public class InputMethodSwitcher {
@@ -12,7 +12,7 @@ public class InputMethodSwitcher {
     public static InputState getCurrentMode() {
         try {
             SettingsState settingsState = SettingsState.getInstance();
-            return StrategyFactory.createStrategy(settingsState.inputSwitchStrategyClass).getCurrentMode();
+            return SwitcherStrategyFactory.createStrategy(settingsState.inputSwitchStrategyClass).getCurrentMode();
         } catch (Exception e) {
             new UIAutomationSwitcher().getCurrentMode();
         }
@@ -22,7 +22,7 @@ public class InputMethodSwitcher {
     public static void change() {
         try {
             SettingsState settingsState = SettingsState.getInstance();
-            StrategyFactory.createStrategy(settingsState.inputSwitchStrategyClass).change();
+            SwitcherStrategyFactory.createStrategy(settingsState.inputSwitchStrategyClass).change();
         } catch (Exception e) {
             new UIAutomationSwitcher().change();
         }

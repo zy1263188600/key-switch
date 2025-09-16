@@ -1,12 +1,11 @@
-package inputmethod.impl;
+package inputmethod.switcher.impl;
 
-import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.Variant;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.ptr.PointerByReference;
 import enums.InputState;
-import inputmethod.InputMethodSwitchStrategy;
+import inputmethod.switcher.InputMethodSwitchStrategy;
 import mmarquee.automation.AutomationException;
 import mmarquee.automation.Element;
 import mmarquee.automation.UIAutomation;

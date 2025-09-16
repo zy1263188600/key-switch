@@ -28,14 +28,18 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
     public transient JBColor enCursorColor;
 
     // 其他配置
-    public Integer balloonDuration = 500;
+    public Integer balloonDuration = 50;
 
     @Nullable
     @Override
     public SettingsState getState() {
         // 同步最新颜色值到存储字段
-        if (zhCursorColor != null) zhCursorColorRGB = zhCursorColor.getRGB();
-        if (enCursorColor != null) enCursorColorRGB = enCursorColor.getRGB();
+        if (zhCursorColor != null) {
+            zhCursorColorRGB = zhCursorColor.getRGB();
+        }
+        if (enCursorColor != null) {
+            enCursorColorRGB = enCursorColor.getRGB();
+        }
         return this;
     }
 

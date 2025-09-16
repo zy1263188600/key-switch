@@ -1,12 +1,12 @@
-package inputmethod;
+package inputmethod.switcher;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
-import inputmethod.impl.KeyboardSwitcher;
-import inputmethod.impl.UIAutomationSwitcher;
+import inputmethod.switcher.impl.KeyboardSwitcher;
+import inputmethod.switcher.impl.UIAutomationSwitcher;
 
-public class StrategyFactory {
+public class SwitcherStrategyFactory {
     private static final Map<String, Supplier<InputMethodSwitchStrategy>> STRATEGIES =
         Map.of( 
             "UIAutomationSwitcher", UIAutomationSwitcher::new,

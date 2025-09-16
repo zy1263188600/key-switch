@@ -1,13 +1,11 @@
-package inputmethod.InputMethodChecker2;
+package inputmethod.switcher.impl;
 
-import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.Variant;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.ptr.PointerByReference;
 import enums.InputState;
-import inputmethod.InputMethodChecker1.InputMethodChecker;
-import inputmethod.InputMethodSwitchStrategy;
+import inputmethod.switcher.InputMethodSwitchStrategy;
 import mmarquee.automation.AutomationException;
 import mmarquee.automation.Element;
 import mmarquee.automation.UIAutomation;
@@ -179,33 +177,7 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
     }
 
     public static boolean isEnglishMode() {
-        try {
-            InputMethodChecker.User32 user32 = InputMethodChecker.User32.INSTANCE;
-            InputMethodChecker.Imm32 imm32 = InputMethodChecker.Imm32.INSTANCE;
-
-            WinDef.HWND activeWindow = User32.INSTANCE.GetForegroundWindow();
-            if (activeWindow == null) {
-                LOG.debug("No  active window found");
-                return false;
-            }
-
-            Pointer imeWnd = imm32.ImmGetDefaultIMEWnd(activeWindow.getPointer());
-            if (imeWnd == null) {
-                LOG.debug("No  IME window found");
-                return true;
-            }
-
-            long result = user32.SendMessage(new WinDef.HWND(imeWnd), WM_IME_CONTROL, IMC_GETOPENSTATUS, 0);
-            Pointer hIMC = imm32.ImmGetContext(activeWindow);
-            if (hIMC != null) {
-                imm32.ImmReleaseContext(activeWindow, hIMC);
-            }
-
-            return result == 0;
-        } catch (Exception e) {
-            LOG.warn("Error  detecting input method state", e);
-            return false;
-        }
+        return KeyboardSwitcher.isEnglishMode();
     }
 
     private void doDefaultAction(Element button) {

@@ -1,4 +1,4 @@
-package inputmethod;
+package inputmethod.switcher;
 
 import enums.InputState;
 

@@ -1,8 +1,12 @@
 package editoraction;
 
 import com.intellij.openapi.CompositeDisposable;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.colors.EditorColors;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -13,25 +17,34 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.editor.*;
 import enums.InputState;
-import inputmethod.InputMethodChecker2.UIAutomationSwitcher;
-import inputmethod.InputMethodSwitcher;
+import inputmethod.cursor.CursorHandle;
+import inputmethod.switcher.InputMethodSwitcher;
 import org.jetbrains.annotations.NotNull;
+import view.SettingsState;
 
-import java.util.HashMap;
+import java.awt.*;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-@Service
-public final class CursorTrackerService {
+@Service(Service.Level.APP)
+public final class CursorTrackerService implements Disposable {
 
     private static final Logger LOG = Logger.getInstance(CursorTrackerService.class);
 
+    private final CompositeDisposable composite = new CompositeDisposable();
+
     // 存储每个编辑器最后输入的时间
-    private final Map<Editor, Long> lastInputTimeMap = new HashMap<>();
+    private final Map<Editor, Long> lastInputTimeMap = new ConcurrentHashMap<>();
     // 事件过滤阈值（毫秒）
     private static final long EVENT_THRESHOLD = 100;
 
+    @Override
+    public void dispose() {
+        composite.dispose();
+        lastInputTimeMap.clear();
+    }
+
     public CursorTrackerService() {
-        CompositeDisposable composite = new CompositeDisposable();
         EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
         // 1. 监听文档变化（输入事件）
         multicaster.addDocumentListener(new DocumentListener() {
@@ -69,14 +82,18 @@ public final class CursorTrackerService {
         }
         int offset = editor.getCaretModel().getOffset();
         String prefixText = getPrefixText(editor, offset, 1);
-        InputState chineseCharacter = isChineseCharacter(prefixText.charAt(0));
+        if (prefixText.isEmpty()) {
+            return;
+        }
+        InputState prefixTextState = isChineseCharacter(prefixText.charAt(0));
         LOG.debug("前一个字符：" + prefixText);
-        LOG.debug("前一个字符状态：" + chineseCharacter);
+        LOG.debug("前一个字符状态：" + prefixTextState);
         InputState currentMode = InputMethodSwitcher.getCurrentMode();
         LOG.debug("输入法当前状态：" + currentMode);
-        if (!chineseCharacter.equals(currentMode)) {
+        if (!prefixTextState.equals(currentMode)) {
             LOG.debug("切换");
             InputMethodSwitcher.change();
+            CursorHandle.change(editor, prefixTextState);
         } else {
             LOG.debug("不切换");
         }
@@ -86,10 +103,6 @@ public final class CursorTrackerService {
 
     //判断是中文还是英文
     private static InputState isChineseCharacter(char c) {
-        // 汉字范围: Unicode 4E00-9FFF（基本汉字）
-        // 全角符号范围: FFE0-FFEE（全角字符块）
-
-//        boolean b = (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0xFFE0 && c <= 0xFFEE);
         boolean b = Character.UnicodeBlock.of(c) == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS;
         if (b) {
             return InputState.CHINESE;

@@ -20,8 +20,6 @@ import java.util.List;
 public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
 
     private static final Logger LOG = Logger.getInstance(UIAutomationSwitcher.class);
-    private static final int WM_IME_CONTROL = 0x0283;
-    private static final int IMC_GETOPENSTATUS = 0x0001;
     private static final int MAX_RETRY_COUNT = 1;
 
     public enum ErrorCode {

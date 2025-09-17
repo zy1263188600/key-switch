@@ -4,6 +4,7 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.VisualPosition;
+import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -25,6 +26,7 @@ public class BalloonHandle implements CursorHandleStrategy {
     // 存储每个Editor对应的气泡框实例
     private static final WeakHashMap<Editor, Balloon> balloonMap = new WeakHashMap<>();
     private static final WeakHashMap<Editor, Alarm> alarmMap = new WeakHashMap<>();
+    private static final WeakHashMap<Editor, VisibleAreaListener> scrollListenerMap = new WeakHashMap<>();
 
     @Override
     public void change(Editor editor, InputState state) {
@@ -49,22 +51,28 @@ public class BalloonHandle implements CursorHandleStrategy {
                 .setHideOnClickOutside(false)
                 .setHideOnKeyOutside(false)
                 .setShowCallout(false)
+                .setAnimationCycle(0)
                 .setDisposable(getAnchorDisposable(editor))
                 .createBalloon();
 
         Point relativePoint = calculateRelativePosition(editor);
         disposeExistingBalloon(editor);
+        removeScrollListener(editor);
         balloon.show(new RelativePoint(editor.getContentComponent(), relativePoint),
                 Balloon.Position.above);
 
         balloonMap.put(editor, balloon);
-
         setupAutoHideTimer(editor, balloon);
+        VisibleAreaListener scrollListener = e -> hideBalloonForEditor(editor);
+        editor.getScrollingModel().addVisibleAreaListener(scrollListener);
+        scrollListenerMap.put(editor, scrollListener);
     }
 
     private Point calculateRelativePosition(Editor editor) {
         VisualPosition visualPos = editor.getCaretModel().getVisualPosition();
-        return editor.visualPositionToXY(visualPos);
+        Point point = editor.visualPositionToXY(visualPos);
+        point.y -= 10;
+        return point;
     }
 
     private Disposable getAnchorDisposable(Editor editor) {
@@ -82,6 +90,28 @@ public class BalloonHandle implements CursorHandleStrategy {
             existingBalloon.hide();
             balloonMap.remove(editor);
         }
+    }
+
+    private void removeScrollListener(Editor editor) {
+        VisibleAreaListener listener = scrollListenerMap.get(editor);
+        if (listener != null) {
+            editor.getScrollingModel().removeVisibleAreaListener(listener);
+            scrollListenerMap.remove(editor);
+        }
+    }
+
+    private void hideBalloonForEditor(Editor editor) {
+        Balloon balloon = balloonMap.get(editor);
+        if (balloon != null) {
+            balloon.hide();
+            balloonMap.remove(editor);
+        }
+        Alarm alarm = alarmMap.get(editor);
+        if (alarm != null) {
+            alarm.cancelAllRequests();
+            alarmMap.remove(editor);
+        }
+        removeScrollListener(editor);
     }
 
     private void setupAutoHideTimer(Editor editor, Balloon balloon) {

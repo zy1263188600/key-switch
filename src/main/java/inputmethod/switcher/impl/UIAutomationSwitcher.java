@@ -22,6 +22,13 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
     private static final Logger LOG = Logger.getInstance(UIAutomationSwitcher.class);
     private static final int MAX_RETRY_COUNT = 1;
 
+    private static final String[] TRAY_WINDOW_CLASSES = {
+            "CiceroUIWndFrame",      // Win11专用
+            "Windows.UI.Core.CoreWindow", // Win10 21H2+
+            "TrayNotifyWnd",         // Win10传统模式
+            "Shell_TrayWnd"          // 终极后备
+    };
+
     public enum ErrorCode {
         COM_INIT_FAILED_STA,
         AUTOMATION_CREATE_FAILED,
@@ -62,7 +69,7 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
             }
             try {
                 automation = UIAutomation.getInstance();
-                WinDef.HWND hTrayWnd = User32.INSTANCE.FindWindow("Shell_TrayWnd", null);
+                WinDef.HWND hTrayWnd = findTrayWindow();
                 if (hTrayWnd == null) {
                     throw new UIAutomationSwitcherException(
                             ErrorCode.TRAY_WINDOW_NOT_FOUND,
@@ -158,6 +165,17 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
                 "Unexpected error during automation",
                 e
         );
+    }
+
+    private WinDef.HWND findTrayWindow() {
+        for (String className : TRAY_WINDOW_CLASSES) {
+            WinDef.HWND hWnd = User32.INSTANCE.FindWindow(className, null);
+            if (hWnd != null) {
+                LOG.debug("Found  tray window: " + className);
+                return hWnd;
+            }
+        }
+        return null;
     }
 
     private boolean isValidInputMethodButton(Element element) throws AutomationException {

@@ -80,6 +80,10 @@ public final class CursorTrackerService implements Disposable {
         if (editor == null || editor != event.getEditor()) {
             return;
         }
+        if (editor.getSelectionModel().hasSelection())  {
+            LOG.debug(" 检测到文本选择，跳过输入法切换");
+            return;
+        }
         int offset = editor.getCaretModel().getOffset();
         String prefixText = getPrefixText(editor, offset, 1);
         if (prefixText.isEmpty()) {

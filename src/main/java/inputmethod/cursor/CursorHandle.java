@@ -3,8 +3,6 @@ package inputmethod.cursor;
 import com.intellij.openapi.editor.Editor;
 import enums.InputState;
 import inputmethod.cursor.impl.CursorColorHandle;
-import inputmethod.switcher.SwitcherStrategyFactory;
-import inputmethod.switcher.impl.UIAutomationSwitcher;
 import view.SettingsState;
 
 public class CursorHandle {

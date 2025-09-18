@@ -118,6 +118,11 @@ intellijPlatform {
         ides {
             recommended()
         }
+        // 添加官方仓库源（覆盖默认搜索）
+        repositories {
+            maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
+            maven("https://www.jetbrains.com/intellij-repository/releases")
+        }
     }
 }
 

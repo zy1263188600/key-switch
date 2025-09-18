@@ -1,7 +1,7 @@
 package inputmethod.switcher;
 
 import enums.InputState;
-import inputmethod.switcher.impl.UIAutomationSwitcher;
+import inputmethod.switcher.impl.Windows11UIAutomationSwitcher;
 import view.SettingsState;
 
 public class InputMethodSwitcher {
@@ -14,7 +14,7 @@ public class InputMethodSwitcher {
             SettingsState settingsState = SettingsState.getInstance();
             return SwitcherStrategyFactory.createStrategy(settingsState.inputSwitchStrategyClass).getCurrentMode();
         } catch (Exception e) {
-            new UIAutomationSwitcher().getCurrentMode();
+            new Windows11UIAutomationSwitcher().getCurrentMode();
         }
         return InputState.ENGLISH;
     }
@@ -24,7 +24,7 @@ public class InputMethodSwitcher {
             SettingsState settingsState = SettingsState.getInstance();
             SwitcherStrategyFactory.createStrategy(settingsState.inputSwitchStrategyClass).change();
         } catch (Exception e) {
-            new UIAutomationSwitcher().change();
+            new Windows11UIAutomationSwitcher().change();
         }
     }
 }

@@ -16,7 +16,7 @@ import java.awt.*;
 )
 public class SettingsState implements PersistentStateComponent<SettingsState> {
     // 策略配置
-    public String inputSwitchStrategyClass = "UIAutomationSwitcher";
+    public String inputSwitchStrategyClass = "Windows11UIAutomationSwitcher";
     public String switchingStrategyClass = "CursorColorStrategy";
 
     // 颜色存储方案 (核心修改)

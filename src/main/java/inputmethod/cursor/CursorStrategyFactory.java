@@ -2,9 +2,6 @@ package inputmethod.cursor;
 
 import inputmethod.cursor.impl.BalloonHandle;
 import inputmethod.cursor.impl.CursorColorHandle;
-import inputmethod.switcher.InputMethodSwitchStrategy;
-import inputmethod.switcher.impl.KeyboardSwitcher;
-import inputmethod.switcher.impl.UIAutomationSwitcher;
 
 import java.util.Map;
 import java.util.function.Supplier;

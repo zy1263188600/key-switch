@@ -17,17 +17,10 @@ import com.intellij.openapi.diagnostic.Logger;
 
 import java.util.List;
 
-public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
+public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy {
 
-    private static final Logger LOG = Logger.getInstance(UIAutomationSwitcher.class);
+    private static final Logger LOG = Logger.getInstance(Windows11UIAutomationSwitcher.class);
     private static final int MAX_RETRY_COUNT = 1;
-
-    private static final String[] TRAY_WINDOW_CLASSES = {
-            "CiceroUIWndFrame",      // Win11专用
-            "Windows.UI.Core.CoreWindow", // Win10 21H2+
-            "TrayNotifyWnd",         // Win10传统模式
-            "Shell_TrayWnd"          // 终极后备
-    };
 
     public enum ErrorCode {
         COM_INIT_FAILED_STA,
@@ -96,7 +89,7 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
                     } finally {
                         long durationNano = System.nanoTime() - startTimeNano;
                         double milliseconds = durationNano / 1e6;
-                        LOG.debug("findAll  execution time: " + String.format("%.6f", milliseconds) + " ms");
+                        LOG.debug("findAll execution time: " + String.format("%.6f", milliseconds) + " ms");
                     }
 
                     if (buttons == null || buttons.isEmpty()) {
@@ -168,12 +161,10 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
     }
 
     private WinDef.HWND findTrayWindow() {
-        for (String className : TRAY_WINDOW_CLASSES) {
-            WinDef.HWND hWnd = User32.INSTANCE.FindWindow(className, null);
-            if (hWnd != null) {
-                LOG.debug("Found  tray window: " + className);
-                return hWnd;
-            }
+        WinDef.HWND hWnd = User32.INSTANCE.FindWindow("Shell_TrayWnd", null);
+        if (hWnd != null) {
+            LOG.debug("Found tray window: ");
+            return hWnd;
         }
         return null;
     }

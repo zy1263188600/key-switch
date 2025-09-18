@@ -23,10 +23,9 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
     private static final int MAX_RETRY_COUNT = 1;
 
     private static final String[] TRAY_WINDOW_CLASSES = {
-            "CiceroUIWndFrame",      // Win11专用
-            "Windows.UI.Core.CoreWindow", // Win10 21H2+
-            "TrayNotifyWnd",         // Win10传统模式
-            "Shell_TrayWnd"          // 终极后备
+//            "Windows.UI.Core.CoreWindow", // Win10 21H2+
+//            "TrayNotifyWnd",         // Win10传统模式
+            "Shell_TrayWnd"      // Win11专用
     };
 
     public enum ErrorCode {
@@ -86,7 +85,8 @@ public class UIAutomationSwitcher implements InputMethodSwitchStrategy {
                 }
 
                 Variant.VARIANT.ByValue variant = new Variant.VARIANT.ByValue();
-                variant.setValue(3, new WinDef.LONG(50000L));
+//                variant.setValue(3, new WinDef.LONG(50000L));
+                variant.setValue(3, new WinDef.LONG(50021L));
                 PointerByReference propertyCondition = automation.createPropertyCondition(30003, variant);
 
                 if (buttons == null) {

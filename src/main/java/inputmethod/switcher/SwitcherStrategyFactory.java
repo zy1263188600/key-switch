@@ -5,11 +5,12 @@ import java.util.function.Supplier;
 
 import inputmethod.switcher.impl.KeyboardSwitcher;
 import inputmethod.switcher.impl.UIAutomationSwitcher;
+import inputmethod.switcher.impl.Windows10LanguageBarSwitcher;
 
 public class SwitcherStrategyFactory {
     private static final Map<String, Supplier<InputMethodSwitchStrategy>> STRATEGIES =
         Map.of( 
-            "UIAutomationSwitcher", UIAutomationSwitcher::new,
+            "UIAutomationSwitcher", Windows10LanguageBarSwitcher::new,
             "KeyboardSwitcher", KeyboardSwitcher::new
         );
  

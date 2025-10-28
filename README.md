@@ -2,15 +2,35 @@
 # 🔑 key-switch —— 智能输入法自动切换工具
 
 <!-- Plugin description -->
-**key-switch** Automatically switch between Chinese and English input states based on the character type in front of the cursor, making your input experience as smooth as flowing clouds and water!  
+**key-switch** 
 根据光标前的字符类型，自动切换中英文输入状态，让您的输入体验如行云流水般顺畅！彻底告别Shift！
 <!-- Plugin description end -->
 ## 🚀 核心功能
-智能感知光标前的字符特征，精准触发输入法切换，告别手动切换的繁琐操作。
-## ⚠️ 注意事项
-暂时只支持windows，不支持mac、linux
+智能感知光标前的字符特征，精准触发输入法切换，告别手动切换中英文的繁琐操作。
+## ⚠️ 使用插件注意事项
+1、暂时只支持windows，不支持mac、linux   
+2、确保右下角有 输入法指示器
+<img width="265" height="40" alt="image" src="https://github.com/user-attachments/assets/dc964302-1238-45ee-9f61-1cbf7037f902" />   
+- ###  操作步骤：
+- #### 打开设置菜单
+   右键点击屏幕左下角的 Windows徽标（开始按钮），选择 “设置”（齿轮图标），或按快捷键 Win + I。
+- #### 进入语言设置
+   在设置窗口中点击 “时间和语言” → 左侧选择 “语言” → 右侧点击 “拼写、键入和键盘设置”。   
+   <img width="901" height="732" alt="image" src="https://github.com/user-attachments/assets/a2e7cbfe-bffc-4ed4-9e7d-857b04168a26" />
+- #### 打开高级键盘设置
+   向下滚动页面，找到并点击 “高级键盘设置”。   
+   <img width="901" height="732" alt="image" src="https://github.com/user-attachments/assets/4d6dd950-4a86-4b27-93d8-6a96b0b6bc3b" />
 
+- #### 切换语言栏显示模式
+   在“高级键盘设置”界面中，找到 “使用桌面语言栏（如果可用）”，取消勾选此项   
+   <img width="555" height="424" alt="image" src="https://github.com/user-attachments/assets/70558194-5c4f-4417-88c5-4c250d3a83e9" />
 
+## 启动项目
+下载仓库代码之后，在根目录下执行：
+确保jdk21以上、项目为gradle （这是jetbrains插件的规范，PS：gradle真的好难用）最好有科学上网或者gradle-wrapper.properties中的distributionUrl为国内源
+```bash
+gradle  runIde --stacktrace 
+```
 ## 📅 更新计划
 ### ✅ 已完成
 1. **可视化切换方式配置**  
@@ -23,7 +43,7 @@
     ![img_2.png](img.png)
   - [x] 实现静默点击，不会切换焦点窗口，不会触发windows按钮悬停事件
   - [x] 支持windows11
-  - [ ] *待测试：Windows 10环境兼容性验证*
+  - [x] 支持Windows10
 
 
 - `模拟快捷键模式`：

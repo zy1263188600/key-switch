@@ -20,16 +20,10 @@ import java.util.List;
 public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy {
 
     private static final Logger LOG = Logger.getInstance(Windows11UIAutomationSwitcher.class);
-    private static final int MAX_RETRY_COUNT = 1;
+    private static final int MAX_RETRY_COUNT = 3;
 
     public enum ErrorCode {
-        COM_INIT_FAILED_STA,
-        AUTOMATION_CREATE_FAILED,
-        TRAY_WINDOW_NOT_FOUND,
-        ELEMENT_FROM_HANDLE_FAILED,
-        BUTTONS_NOT_FOUND,
-        BUTTON_INVOKE_FAILED,
-        NO_VALID_BUTTON
+        COM_INIT_FAILED_STA, AUTOMATION_CREATE_FAILED, TRAY_WINDOW_NOT_FOUND, ELEMENT_FROM_HANDLE_FAILED, BUTTONS_NOT_FOUND, BUTTON_INVOKE_FAILED, NO_VALID_BUTTON
     }
 
     public static class UIAutomationSwitcherException extends RuntimeException {
@@ -53,7 +47,7 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
     private List<Element> buttons;
 
     private void clickInputMethodButton() {
-        int retryCount = 0;
+        int retryCount = 1;
         UIAutomation automation;
 
         while (retryCount <= MAX_RETRY_COUNT) {
@@ -64,18 +58,12 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
                 automation = UIAutomation.getInstance();
                 WinDef.HWND hTrayWnd = findTrayWindow();
                 if (hTrayWnd == null) {
-                    throw new UIAutomationSwitcherException(
-                            ErrorCode.TRAY_WINDOW_NOT_FOUND,
-                            "Tray window not found"
-                    );
+                    throw new UIAutomationSwitcherException(ErrorCode.TRAY_WINDOW_NOT_FOUND, "Tray window not found");
                 }
 
                 Element root = automation.getElementFromHandle(hTrayWnd);
                 if (root == null) {
-                    throw new UIAutomationSwitcherException(
-                            ErrorCode.ELEMENT_FROM_HANDLE_FAILED,
-                            "Failed to get element from handle"
-                    );
+                    throw new UIAutomationSwitcherException(ErrorCode.ELEMENT_FROM_HANDLE_FAILED, "Failed to get element from handle");
                 }
 
                 Variant.VARIANT.ByValue variant = new Variant.VARIANT.ByValue();
@@ -93,15 +81,12 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
                     }
 
                     if (buttons == null || buttons.isEmpty()) {
-                        throw new UIAutomationSwitcherException(
-                                ErrorCode.BUTTONS_NOT_FOUND,
-                                "No buttons found"
-                        );
+                        throw new UIAutomationSwitcherException(ErrorCode.BUTTONS_NOT_FOUND, "No buttons found");
                     }
                 }
 
-                if (buttons.size() > 5) {
-                    Element element = buttons.get(buttons.size() - 5);
+                if (buttons.size() > 4) {
+                    Element element = buttons.get(buttons.size() - 4);
                     if (isValidInputMethodButton(element)) {
                         doDefaultAction(element);
                         return;
@@ -116,10 +101,7 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
                     }
                 }
 
-                throw new UIAutomationSwitcherException(
-                        ErrorCode.NO_VALID_BUTTON,
-                        "No valid input method button found"
-                );
+                throw new UIAutomationSwitcherException(ErrorCode.NO_VALID_BUTTON, "No valid input method button found");
 
             } catch (Exception e) {
                 handleException(e, retryCount);
@@ -127,10 +109,7 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
             }
         }
 
-        throw new UIAutomationSwitcherException(
-                ErrorCode.AUTOMATION_CREATE_FAILED,
-                "Operation failed after " + MAX_RETRY_COUNT + " retries"
-        );
+        throw new UIAutomationSwitcherException(ErrorCode.AUTOMATION_CREATE_FAILED, "Operation failed after " + MAX_RETRY_COUNT + " retries");
     }
 
     private void handleException(Exception e, int retryCount) {
@@ -141,11 +120,7 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
         String message = e.getMessage();
         if (message != null) {
             if (message.contains("RPC_E_CHANGED_MODE")) {
-                throw new UIAutomationSwitcherException(
-                        ErrorCode.COM_INIT_FAILED_STA,
-                        "COM initialization failed in STA mode",
-                        e
-                );
+                throw new UIAutomationSwitcherException(ErrorCode.COM_INIT_FAILED_STA, "COM initialization failed in STA mode", e);
             } else if (message.contains("0x80040201")) {
                 LOG.warn("Taskbar  resource invalid, retrying... Attempt: " + (retryCount + 1));
                 buttons = null;  // Clear cache for retry
@@ -153,11 +128,7 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
             }
         }
 
-        throw new UIAutomationSwitcherException(
-                ErrorCode.AUTOMATION_CREATE_FAILED,
-                "Unexpected error during automation",
-                e
-        );
+        throw new UIAutomationSwitcherException(ErrorCode.AUTOMATION_CREATE_FAILED, "Unexpected error during automation", e);
     }
 
     private WinDef.HWND findTrayWindow() {
@@ -171,11 +142,8 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
 
     private boolean isValidInputMethodButton(Element element) throws AutomationException {
         String name = element.getName();
-        return name != null && (
-                name.contains("输入指示器") ||
-                        name.contains("输入模式") ||
-                        name.contains("语言栏")
-        );
+        boolean b = name != null && (name.contains("输入指示器") || name.contains("中文模式") || name.contains("英语模式"));
+        return b;
     }
 
     @Override
@@ -192,15 +160,10 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
             IUIAutomationElement element = button.getElement();
             PointerByReference legacyPatternRef = new PointerByReference();
             element.getCurrentPattern(10018, legacyPatternRef);
-            IUIAutomationLegacyIAccessiblePattern legacy =
-                    IUIAutomationLegacyIAccessiblePatternConverter.pointerToInterface(legacyPatternRef);
+            IUIAutomationLegacyIAccessiblePattern legacy = IUIAutomationLegacyIAccessiblePatternConverter.pointerToInterface(legacyPatternRef);
             legacy.doDefaultAction();
         } catch (Exception e) {
-            throw new UIAutomationSwitcherException(
-                    ErrorCode.BUTTON_INVOKE_FAILED,
-                    "Failed to invoke button action",
-                    e
-            );
+            throw new UIAutomationSwitcherException(ErrorCode.BUTTON_INVOKE_FAILED, "Failed to invoke button action", e);
         }
     }
 

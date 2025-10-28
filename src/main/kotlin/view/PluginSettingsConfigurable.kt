@@ -37,9 +37,9 @@ class PluginSettingsConfigurable() : Configurable {
                     label("切换策略:")
                     cell(
                         createStrategyComboBox(
-                            items = arrayOf("Windows11UIAutomationSwitcher", "KeyboardSwitcher"),
+                            items = arrayOf("UIAutomationSwitcher", "KeyboardSwitcher"),
                             displayMap = mapOf(
-                                "Windows11UIAutomationSwitcher" to "UIAutomation模拟点击托盘输入法按钮(默认)",
+                                "UIAutomationSwitcher" to "UIAutomation模拟点击托盘输入法按钮(默认)",
                                 "KeyboardSwitcher" to "shift快捷键(兼容性好，可能误触发事件)"
                             ),
                             selected = state.inputSwitchStrategyClass!!

@@ -16,9 +16,9 @@ public class SwitcherStrategyFactory {
         STRATEGIES = new HashMap<>();
         STRATEGIES.put("KeyboardSwitcher", KeyboardSwitcher::new);
         if (WindowsVersionUtil.isWindows11()) {
-            STRATEGIES.put("Windows11UIAutomationSwitcher", Windows11UIAutomationSwitcher::new);
+            STRATEGIES.put("UIAutomationSwitcher", Windows11UIAutomationSwitcher::new);
         } else  {
-            STRATEGIES.put("Windows11UIAutomationSwitcher", Windows10LanguageBarUIAutomationSwitcher::new);
+            STRATEGIES.put("UIAutomationSwitcher", Windows11UIAutomationSwitcher::new);
         }
 
     }

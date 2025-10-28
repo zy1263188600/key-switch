@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import inputmethod.switcher.impl.KeyboardSwitcher;
 import inputmethod.switcher.impl.Windows11UIAutomationSwitcher;
-import inputmethod.switcher.impl.Windows10LanguageBarUIAutomationSwitcher;
+import inputmethod.switcher.impl.Windows10UIAutomationSwitcher;
 import utlis.WindowsVersionUtil;
 
 public class SwitcherStrategyFactory {
@@ -18,7 +18,7 @@ public class SwitcherStrategyFactory {
         if (WindowsVersionUtil.isWindows11()) {
             STRATEGIES.put("UIAutomationSwitcher", Windows11UIAutomationSwitcher::new);
         } else  {
-            STRATEGIES.put("UIAutomationSwitcher", Windows11UIAutomationSwitcher::new);
+            STRATEGIES.put("UIAutomationSwitcher", Windows10UIAutomationSwitcher::new);
         }
 
     }

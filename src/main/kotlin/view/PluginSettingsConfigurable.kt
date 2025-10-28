@@ -20,6 +20,7 @@ import javax.swing.JComponent
 import com.intellij.util.ui.JBUI
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
+import java.io.File
 
 class PluginSettingsConfigurable() : Configurable {
     private var inputSwitchStrategyComboBox: JComboBox<String>? = null
@@ -30,7 +31,7 @@ class PluginSettingsConfigurable() : Configurable {
     private var balloonDurationField: JBTextField? = null
     private var balloonDurationValidator: ComponentValidator? = null
 
-    override fun createComponent(): JComponent? {
+    override fun createComponent(): JComponent {
         return panel {
             group("输入法设置") {
                 row {

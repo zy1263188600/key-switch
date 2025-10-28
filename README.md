@@ -3,11 +3,13 @@
 
 <!-- Plugin description -->
 **key-switch** 
-根据光标前的字符类型，自动切换中英文输入状态，让您的输入体验如行云流水般顺畅！彻底告别Shift！
+根据光标前的字符类型，自动切换中英文输入状态，让您的输入体验如行云流水般顺畅！彻底告别Shift！   
+## 使用插件
+   IDEA 插件市场搜索 ```key-switch```   
 <!-- Plugin description end -->
 ## 🚀 核心功能
 智能感知光标前的字符特征，精准触发输入法切换，告别手动切换中英文的繁琐操作。
-## ⚠️ 使用插件注意事项
+## ⚠️ 注意事项
 1、暂时只支持windows，不支持mac、linux   
 2、确保右下角有 输入法指示器
 <img width="265" height="40" alt="image" src="https://github.com/user-attachments/assets/dc964302-1238-45ee-9f61-1cbf7037f902" />   

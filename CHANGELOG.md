@@ -4,4 +4,4 @@
 
 ## [Unreleased]
 ### Added
-- 新增光标颜色提示策略、气泡框提示策略
+- fix: win10 UIAutomation 输入法模式图标找不到

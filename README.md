@@ -2,11 +2,13 @@
 # 🔑 key-switch —— 智能输入法自动切换工具
 
 <!-- Plugin description -->
-**key-switch** 
-根据光标前的字符类型，自动切换中英文输入状态，让您的输入体验如行云流水般顺畅！彻底告别Shift！   
-## 使用插件
-   IDEA 插件市场搜索 ```key-switch```   
+**key-switch** Automatically switch between Chinese and English input states based on the character type in front of the cursor, making your input experience as smooth as flowing clouds and water!  
+**key-switch**
+根据光标前的字符类型，自动切换中英文输入状态，让您的输入体验如行云流水般顺畅！彻底告别Shift！
+如果该插件帮助到你，请不要吝啬你的star哟！https://github.com/zy1263188600/key-switch
 <!-- Plugin description end -->
+## 使用插件
+   IDEA 插件市场搜索 ```key-switch```
 ## 🚀 核心功能
 智能感知光标前的字符特征，精准触发输入法切换，告别手动切换中英文的繁琐操作。
 ## ⚠️ 注意事项

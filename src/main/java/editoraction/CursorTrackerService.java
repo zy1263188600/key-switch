@@ -41,7 +41,7 @@ public final class CursorTrackerService implements Disposable {
 
     public CursorTrackerService() {
         EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
-        // 1. 监听文档变化（输入事件）
+        // 监听文档变化（输入事件）
         multicaster.addDocumentListener(new DocumentListener() {
             @Override
             public void documentChanged(@NotNull DocumentEvent event) {
@@ -54,7 +54,7 @@ public final class CursorTrackerService implements Disposable {
             }
         }, composite);
 
-        // 2. 监听光标移动
+        // 监听光标移动
         multicaster.addCaretListener(new CaretListener() {
             @Override
             public void caretPositionChanged(@NotNull CaretEvent event) {

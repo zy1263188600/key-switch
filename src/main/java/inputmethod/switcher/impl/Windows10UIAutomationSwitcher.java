@@ -142,8 +142,7 @@ public class Windows10UIAutomationSwitcher implements InputMethodSwitchStrategy 
 
     private boolean isValidInputMethodButton(Element element) throws AutomationException {
         String name = element.getName();
-        boolean b = name != null && (name.contains("输入指示器") || name.contains("中文模式") || name.contains("英语模式"));
-        return b;
+        return name != null && (name.contains("输入指示器") || name.contains("中文模式") || name.contains("英语模式"));
     }
 
     @Override
@@ -161,7 +160,8 @@ public class Windows10UIAutomationSwitcher implements InputMethodSwitchStrategy 
             PointerByReference legacyPatternRef = new PointerByReference();
             element.getCurrentPattern(10018, legacyPatternRef);
             IUIAutomationLegacyIAccessiblePattern legacy = IUIAutomationLegacyIAccessiblePatternConverter.pointerToInterface(legacyPatternRef);
-            legacy.doDefaultAction();
+            int i = legacy.doDefaultAction();
+            LOG.debug("doDefaultAction" + i);
         } catch (Exception e) {
             throw new UIAutomationSwitcherException(ErrorCode.BUTTON_INVOKE_FAILED, "Failed to invoke button action", e);
         }

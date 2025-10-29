@@ -20,9 +20,12 @@ import javax.swing.JComponent
 import com.intellij.util.ui.JBUI
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
-import java.io.File
 
 class PluginSettingsConfigurable() : Configurable {
+
+    private var switchLabel = "切换策略:"
+    private var tipLabel = "提示策略:"
+
     private var inputSwitchStrategyComboBox: JComboBox<String>? = null
     private var switchingStrategyComboBox: JComboBox<String>? = null
     private var zhCursorColorPanel: ColorPanel? = null
@@ -35,7 +38,7 @@ class PluginSettingsConfigurable() : Configurable {
         return panel {
             group("输入法设置") {
                 row {
-                    label("切换策略:")
+                    label(switchLabel)
                     cell(
                         createStrategyComboBox(
                             items = arrayOf("UIAutomationSwitcher", "KeyboardSwitcher"),
@@ -54,7 +57,7 @@ class PluginSettingsConfigurable() : Configurable {
 
             group("提示设置") {
                 row {
-                    label("提示策略:")
+                    label(tipLabel)
                     cell(
                         createStrategyComboBox(
                             items = arrayOf("CursorColorStrategy", "BalloonStrategy"),
@@ -146,7 +149,7 @@ class PluginSettingsConfigurable() : Configurable {
         } catch (_: NumberFormatException) {
             return "必须输入数字"
         }
-        if (value < 1 || value > 10000) {
+        if (value !in 1..10000) {
             return "请输入1-10000之间的数字"
         }
         return null

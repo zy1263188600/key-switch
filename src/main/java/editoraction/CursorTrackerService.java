@@ -2,11 +2,8 @@ package editoraction;
 
 import com.intellij.openapi.CompositeDisposable;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -20,9 +17,7 @@ import enums.InputState;
 import inputmethod.cursor.CursorHandle;
 import inputmethod.switcher.InputMethodSwitcher;
 import org.jetbrains.annotations.NotNull;
-import view.SettingsState;
 
-import java.awt.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

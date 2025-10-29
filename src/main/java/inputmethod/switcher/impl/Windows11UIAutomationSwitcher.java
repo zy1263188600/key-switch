@@ -194,7 +194,8 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
             element.getCurrentPattern(10018, legacyPatternRef);
             IUIAutomationLegacyIAccessiblePattern legacy =
                     IUIAutomationLegacyIAccessiblePatternConverter.pointerToInterface(legacyPatternRef);
-            legacy.doDefaultAction();
+            int i = legacy.doDefaultAction();
+            LOG.debug("doDefaultAction" + i);
         } catch (Exception e) {
             throw new UIAutomationSwitcherException(
                     ErrorCode.BUTTON_INVOKE_FAILED,

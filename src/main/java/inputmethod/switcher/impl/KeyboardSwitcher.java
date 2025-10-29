@@ -75,7 +75,8 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
             long result = user32.SendMessage(new HWND(imeWnd), WM_IME_CONTROL, IMC_GETOPENSTATUS, 0);
             Pointer hIMC = imm32.ImmGetContext(activeWindow);
             if (hIMC != null) {
-                imm32.ImmReleaseContext(activeWindow, hIMC);
+                boolean b = imm32.ImmReleaseContext(activeWindow, hIMC);
+                LOG.debug("ImmReleaseContext" + b);
             }
 
             return result == 0;
@@ -106,16 +107,15 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
     }
 
 
-
     @Override
     public void change() {
         long startTimeNano_l = System.nanoTime();
         try {
             pressShift();
         } finally {
-            long nano_l = System.nanoTime()  - startTimeNano_l;
+            long nano_l = System.nanoTime() - startTimeNano_l;
             double milliseconds_l = nano_l / 1e6;
-            String msFormatted_l = String.format("%.6f",  milliseconds_l);
+            String msFormatted_l = String.format("%.6f", milliseconds_l);
             LOG.info("  执行时间: " + msFormatted_l + " ms");
         }
     }

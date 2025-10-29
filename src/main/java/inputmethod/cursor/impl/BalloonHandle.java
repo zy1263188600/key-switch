@@ -8,12 +8,10 @@ import com.intellij.openapi.editor.event.VisibleAreaListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.util.Alarm;
 import com.intellij.util.ui.JBUI;
 import enums.InputState;
-import inputmethod.cursor.CursorHandle;
 import inputmethod.cursor.CursorHandleStrategy;
 import view.SettingsState;
 

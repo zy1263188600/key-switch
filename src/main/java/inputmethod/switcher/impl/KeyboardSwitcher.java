@@ -10,6 +10,7 @@ import com.sun.jna.platform.win32.WinDef.HWND;
 import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
 import inputmethod.switcher.InputMethodSwitchStrategy;
+import utlis.LogUtil;
 
 
 import static com.sun.jna.platform.win32.WinUser.KEYBDINPUT.KEYEVENTF_KEYUP;
@@ -62,13 +63,13 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
 
             HWND activeWindow = user32.GetForegroundWindow();
             if (activeWindow == null) {
-                LOG.info("未找到激活窗口");
+                LogUtil.info("未找到激活窗口");
                 return false;
             }
 
             Pointer imeWnd = imm32.ImmGetDefaultIMEWnd(activeWindow.getPointer());
             if (imeWnd == null) {
-                LOG.info("未找到输入法窗口");
+                LogUtil.info("未找到输入法窗口");
                 return true; // 英文输入法可能没有 IME 窗口
             }
 
@@ -76,12 +77,12 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
             Pointer hIMC = imm32.ImmGetContext(activeWindow);
             if (hIMC != null) {
                 boolean b = imm32.ImmReleaseContext(activeWindow, hIMC);
-                LOG.debug("ImmReleaseContext" + b);
+                LogUtil.info("ImmReleaseContext:" + b);
             }
 
             return result == 0;
         } catch (Exception e) {
-            LOG.info("获取输入法异常");
+            LogUtil.info("获取输入法异常");
             return false;
         }
     }
@@ -96,12 +97,12 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
 
         // 按下左 Shift
         user32.keybd_event((byte) VK_LSHIFT, (byte) 0, 0, 0);
-        LOG.info("按下 Shift");
+        LogUtil.info("按下 Shift");
 
 
         // 释放左 Shift
         user32.keybd_event((byte) VK_LSHIFT, (byte) 0, KEYEVENTF_KEYUP, 0);
-        LOG.info("释放 Shift");
+        LogUtil.info("释放 Shift");
         lastPressTime = now;
 
     }
@@ -116,7 +117,7 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
             long nano_l = System.nanoTime() - startTimeNano_l;
             double milliseconds_l = nano_l / 1e6;
             String msFormatted_l = String.format("%.6f", milliseconds_l);
-            LOG.info("  执行时间: " + msFormatted_l + " ms");
+            LogUtil.info("  执行时间: " + msFormatted_l + " ms");
         }
     }
 

@@ -14,6 +14,7 @@ import mmarquee.uiautomation.IUIAutomationLegacyIAccessiblePattern;
 import mmarquee.uiautomation.IUIAutomationLegacyIAccessiblePatternConverter;
 import mmarquee.uiautomation.TreeScope;
 import com.intellij.openapi.diagnostic.Logger;
+import utlis.LogUtil;
 
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
 
         while (retryCount <= MAX_RETRY_COUNT) {
             if (retryCount == 1) {
-                LOG.info("RETRY_COUNT:" + retryCount);
+                LogUtil.debug("RETRY_COUNT:" + retryCount);
             }
             try {
                 automation = UIAutomation.getInstance();
@@ -89,7 +90,7 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
                     } finally {
                         long durationNano = System.nanoTime() - startTimeNano;
                         double milliseconds = durationNano / 1e6;
-                        LOG.debug("findAll execution time: " + String.format("%.6f", milliseconds) + " ms");
+                        LogUtil.debug("findAll execution time: " + String.format("%.6f", milliseconds) + " ms");
                     }
 
                     if (buttons == null || buttons.isEmpty()) {
@@ -163,7 +164,7 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
     private WinDef.HWND findTrayWindow() {
         WinDef.HWND hWnd = User32.INSTANCE.FindWindow("Shell_TrayWnd", null);
         if (hWnd != null) {
-            LOG.debug("Found tray window: ");
+            LogUtil.debug("Found tray window: ");
             return hWnd;
         }
         return null;
@@ -195,7 +196,7 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
             IUIAutomationLegacyIAccessiblePattern legacy =
                     IUIAutomationLegacyIAccessiblePatternConverter.pointerToInterface(legacyPatternRef);
             int i = legacy.doDefaultAction();
-            LOG.debug("doDefaultAction" + i);
+            LogUtil.debug("doDefaultAction:" + i);
         } catch (Exception e) {
             throw new UIAutomationSwitcherException(
                     ErrorCode.BUTTON_INVOKE_FAILED,
@@ -215,7 +216,7 @@ public class Windows11UIAutomationSwitcher implements InputMethodSwitchStrategy 
         } finally {
             long durationNano = System.nanoTime() - startTimeNano;
             double milliseconds = durationNano / 1e6;
-            LOG.info("Execution  time: " + String.format("%.6f", milliseconds) + " ms");
+            LogUtil.debug("Execution  time: " + String.format("%.6f", milliseconds) + " ms");
         }
     }
 }

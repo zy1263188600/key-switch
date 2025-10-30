@@ -4,4 +4,5 @@
 
 ## [Unreleased]
 ### Added
-- fix: win10 UIAutomation 输入法模式图标找不到
+- fix: 选中文本后鼠标第一次单击范围外的文本不会触发切换
+- 

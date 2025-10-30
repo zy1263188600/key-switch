@@ -77,12 +77,12 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
             Pointer hIMC = imm32.ImmGetContext(activeWindow);
             if (hIMC != null) {
                 boolean b = imm32.ImmReleaseContext(activeWindow, hIMC);
-                LogUtil.info("ImmReleaseContext:" + b);
+                LogUtil.debug("ImmReleaseContext:" + b);
             }
 
             return result == 0;
         } catch (Exception e) {
-            LogUtil.info("获取输入法异常");
+            LogUtil.error("获取输入法异常");
             return false;
         }
     }
@@ -97,12 +97,12 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
 
         // 按下左 Shift
         user32.keybd_event((byte) VK_LSHIFT, (byte) 0, 0, 0);
-        LogUtil.info("按下 Shift");
+        LogUtil.debug("按下 Shift");
 
 
         // 释放左 Shift
         user32.keybd_event((byte) VK_LSHIFT, (byte) 0, KEYEVENTF_KEYUP, 0);
-        LogUtil.info("释放 Shift");
+        LogUtil.debug("释放 Shift");
         lastPressTime = now;
 
     }

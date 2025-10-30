@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public class PluginStartup implements com.intellij.openapi.startup.ProjectActivity {
     @Override
     public @Nullable Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
-        return ApplicationManager.getApplication().getService(CursorTrackerService.class);
+        CursorTrackerService cursorTrackerService = ApplicationManager.getApplication().getService(CursorTrackerService.class);
+        return cursorTrackerService;
     }
 }

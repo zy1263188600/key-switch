@@ -1,28 +1,37 @@
 package editoraction;
 
+import com.intellij.ide.DataManager;
 import com.intellij.openapi.CompositeDisposable;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.event.*;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.editor.impl.EditorComponentImpl;
+import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.editor.*;
+import com.intellij.openapi.wm.IdeFocusManager;
 import enums.InputState;
 import inputmethod.cursor.CursorHandle;
 import inputmethod.switcher.InputMethodSwitcher;
 import org.jetbrains.annotations.NotNull;
 import utlis.LogUtil;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service(Service.Level.APP)
 public final class CursorTrackerService implements Disposable {
-
-    private static final Logger LOG = Logger.getInstance(CursorTrackerService.class);
 
     private final CompositeDisposable composite = new CompositeDisposable();
 
@@ -37,6 +46,7 @@ public final class CursorTrackerService implements Disposable {
     public void dispose() {
         composite.dispose();
         lastInputTimeMap.clear();
+        lastSelectionStateMap.clear();
     }
 
     public CursorTrackerService() {
@@ -82,20 +92,12 @@ public final class CursorTrackerService implements Disposable {
                 long currentTime = System.currentTimeMillis();
                 // 如果最近没有输入事件，或者输入事件已经过去足够长时间
                 if (currentTime - lastInputTime > EVENT_THRESHOLD) {
-                    handleCursorMovement(event);
+                    switchInputMethodBasedOnChar(editor);
                 } else {
                     LogUtil.info("抛弃光标移动事件");
                 }
             }
         }, composite);
-
-        // 监听光标移动
-//        multicaster.addCaretListener(new CaretListener() {
-//            @Override
-//            public void caretPositionChanged(@NotNull CaretEvent event) {
-//                System.out.println("Selection  state: " + event.getEditor().getSelectionModel().hasSelection()); // Incorrectly true
-//            }
-//        }, composite);
 
         //监听鼠标拖动选择事件
         multicaster.addEditorMouseListener(new EditorMouseListener() {
@@ -109,7 +111,7 @@ public final class CursorTrackerService implements Disposable {
                 SelectionModel selectionModel = editor.getSelectionModel();
                 Boolean remove = lastSelectionStateMap.remove(e.getEditor());
                 if (selectionModel.hasSelection() && remove) {
-                    handleDragEnd(editor);
+                    switchInputMethodBasedOnChar(editor);
                     lastSelectionStateMap.remove(e.getEditor());
                 }
             }
@@ -122,33 +124,10 @@ public final class CursorTrackerService implements Disposable {
                 }
             }
         }, composite);
-
     }
 
-    private void handleDragEnd(Editor editor) {
-        LogUtil.info("文本选择触发切换");
-        if (getFocusedEditor() != editor) {
-            return;
-        }
-
-        int offset = editor.getCaretModel().getOffset();
-        String prefixText = getPrefixText(editor, offset, 1);
-
-        if (!prefixText.isEmpty()) {
-            InputState prefixState = isChineseCharacter(prefixText.charAt(0));
-            InputState currentMode = InputMethodSwitcher.getCurrentMode();
-
-            if (!prefixState.equals(currentMode)) {
-                InputMethodSwitcher.change();
-                CursorHandle.change(editor, prefixState);
-            }
-        }
-    }
-
-    private void handleCursorMovement(CaretEvent event) {
-        LogUtil.info("触发切换");
-        Editor editor = getFocusedEditor();
-        if (editor == null || editor != event.getEditor()) {
+    private void switchInputMethodBasedOnChar(Editor editor) {
+        if (editor == null) {
             return;
         }
         int offset = editor.getCaretModel().getOffset();
@@ -160,7 +139,7 @@ public final class CursorTrackerService implements Disposable {
         LogUtil.info("前一个字符：" + prefixText);
         LogUtil.info("前一个字符状态：" + prefixTextState);
         InputState currentMode = InputMethodSwitcher.getCurrentMode();
-        LogUtil.info("输入法当前状态：" + currentMode);
+        LogUtil.info("当前输入法状态：" + currentMode);
         if (!prefixTextState.equals(currentMode)) {
             LogUtil.info("切换");
             InputMethodSwitcher.change();
@@ -168,8 +147,6 @@ public final class CursorTrackerService implements Disposable {
         } else {
             LogUtil.info("不切换");
         }
-        InputState currentMode1 = InputMethodSwitcher.getCurrentMode();
-        LogUtil.info("输入法最终状态：" + currentMode1);
     }
 
     //判断是中文还是英文
@@ -182,17 +159,6 @@ public final class CursorTrackerService implements Disposable {
         }
     }
 
-    // 获取当前焦点编辑器 
-    private Editor getFocusedEditor() {
-        Project[] projects = ProjectManager.getInstance().getOpenProjects();
-        for (Project project : projects) {
-            Editor editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-            if (editor != null && editor.getContentComponent().hasFocus()) {
-                return editor;
-            }
-        }
-        return null;
-    }
 
     // 获取光标前指定长度的文本 
     private String getPrefixText(Editor editor, int offset, int length) {

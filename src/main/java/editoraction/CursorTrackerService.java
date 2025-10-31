@@ -16,22 +16,36 @@ import com.intellij.openapi.fileEditor.impl.EditorWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.editor.*;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.wm.IdeFocusManager;
+import com.intellij.ui.SearchTextField;
 import enums.InputState;
 import inputmethod.cursor.CursorHandle;
 import inputmethod.switcher.InputMethodSwitcher;
 import org.jetbrains.annotations.NotNull;
 import utlis.LogUtil;
 
-import javax.swing.*;
+
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static editoraction.CursorTrackerService.ComponentType.COMMAND_LINE;
+import static editoraction.CursorTrackerService.ComponentType.OTHER_TEXT;
+
 @Service(Service.Level.APP)
 public final class CursorTrackerService implements Disposable {
+    // 新增组件类型枚举
+    enum ComponentType {
+        CODE_EDITOR,        // 代码编辑区
+        FILE_RENAME,        // 文件重命名
+        COMMAND_LINE,       // 终端命令行
+        SEARCH_BOX,         // 搜索框
+        OTHER_TEXT          // 其他文本组件
+    }
 
     private final CompositeDisposable composite = new CompositeDisposable();
 
@@ -39,6 +53,8 @@ public final class CursorTrackerService implements Disposable {
     private final Map<Editor, Long> lastInputTimeMap = new ConcurrentHashMap<>();
     // 存储编辑器上次选择状态
     private final Map<Editor, Boolean> lastSelectionStateMap = new ConcurrentHashMap<>();
+    // 新增存储组件状态
+    private final Map<JTextComponent, Object> textComponentTrackers = new ConcurrentHashMap<>();
     // 事件过滤阈值（毫秒）
     private static final long EVENT_THRESHOLD = 100;
 
@@ -77,11 +93,13 @@ public final class CursorTrackerService implements Disposable {
                 int currentOffset = caretModel.getOffset();
                 int selStart = selectionModel.getSelectionStart();
                 int selEnd = selectionModel.getSelectionEnd();
-                //-1 表示判断当前光标是否紧跟随选择区域
+
                 // 貌似是IDEA平台的BUG　
                 // selectionModel.hasSelection()好像没有正确返回是否在选取中 所以自行判断是否有选中状态
                 // https://youtrack.jetbrains.com/issue/IDEA-381472/hasSelection-returns-true-in-CaretListener-after-moving-cursor-out-of-selection
-                currentOffset = currentOffset - 1;
+                //-1 +1 表示判断当前光标是否紧跟随选择区域
+                selStart = selStart - 1;
+                selEnd = selEnd + 1;
                 // fix 修复选中文本后 鼠标首次单击其余区域不会切换输入法
                 if (currentOffset >= selStart && currentOffset <= selEnd
                 ) {
@@ -124,8 +142,47 @@ public final class CursorTrackerService implements Disposable {
                 }
             }
         }, composite);
-    }
 
+//        //新增全局焦点监听
+//        KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("focusOwner", evt -> {
+//            Component component = (Component) evt.getNewValue();
+//            if (!(component instanceof JTextComponent)) {
+//                return;
+//            }
+//
+//            JTextComponent textComponent = (JTextComponent) component;
+//            ComponentType type = determineComponentType(textComponent);
+//
+//            // 避免重复监听
+//            if (textComponentTrackers.containsKey(textComponent)) {
+//                return;
+//            } else {
+//                System.out.println(textComponentTrackers.get(textComponent));
+//            }
+//
+//            System.out.println("textComponent:" + textComponent);
+//            System.out.println("type:" + type);
+//
+//            textComponentTrackers.put(textComponent, type);
+//        });
+    }
+//
+//    private ComponentType determineComponentType(JTextComponent component) {
+//        // 通过父容器判断文件重命名对话框
+////        if (isInRenameDialog(component))
+////            return ComponentType.FILE_RENAME;
+//
+//        // 通过类名判断终端组件
+//        if (component.getClass().getName().contains("Terminal"))
+//            return COMMAND_LINE;
+//        System.out.println("Locale:" + component.getLocale());
+//        // 通过实例类型判断搜索框
+
+    /// /        if (component instanceof SearchTextField)
+    /// /            return ComponentType.SEARCH_BOX;
+//
+//        return OTHER_TEXT;
+//    }
     private void switchInputMethodBasedOnChar(Editor editor) {
         if (editor == null) {
             return;

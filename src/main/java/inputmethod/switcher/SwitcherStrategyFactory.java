@@ -5,8 +5,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import inputmethod.switcher.impl.KeyboardSwitcher;
-import inputmethod.switcher.impl.Windows11UIAutomationSwitcher;
-import inputmethod.switcher.impl.Windows10UIAutomationSwitcher;
+import inputmethod.switcher.impl.WindowsUIAutomationSwitcher;
 import utlis.WindowsVersionUtil;
 
 public class SwitcherStrategyFactory {
@@ -15,11 +14,7 @@ public class SwitcherStrategyFactory {
     static {
         STRATEGIES = new HashMap<>();
         STRATEGIES.put("KeyboardSwitcher", KeyboardSwitcher::new);
-        if (WindowsVersionUtil.isWindows11()) {
-            STRATEGIES.put("UIAutomationSwitcher", Windows11UIAutomationSwitcher::new);
-        } else  {
-            STRATEGIES.put("UIAutomationSwitcher", Windows10UIAutomationSwitcher::new);
-        }
+        STRATEGIES.put("UIAutomationSwitcher", WindowsUIAutomationSwitcher::new);
 
     }
 

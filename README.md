@@ -15,7 +15,7 @@
 1、暂时只支持windows，不支持mac、linux   
 2、确保右下角有 输入法指示器
 <img width="265" height="40" alt="image" src="https://github.com/user-attachments/assets/dc964302-1238-45ee-9f61-1cbf7037f902" />   
-- ###  操作步骤：
+- ###  输入法指示器设置步骤（仅win10）：
 - #### 打开设置菜单
    右键点击屏幕左下角的 Windows徽标（开始按钮），选择 “设置”（齿轮图标），或按快捷键 Win + I。
 - #### 进入语言设置

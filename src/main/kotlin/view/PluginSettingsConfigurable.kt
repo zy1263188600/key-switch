@@ -109,7 +109,7 @@ class PluginSettingsConfigurable() : Configurable {
                 add(JLabel("气泡持续时间(ms):"))
                 add(JBTextField().apply {
                     balloonDurationField = this
-                    text = state.balloonDuration?.toString() ?: "50"
+                    text = state.balloonDuration?.toString() ?: "500"
                     columns = 6
 
                     addKeyListener(object : KeyAdapter() {
@@ -175,7 +175,7 @@ class PluginSettingsConfigurable() : Configurable {
         // 设置初始值
         zhCursorColorPanel?.selectedColor = state.zhCursorColor ?: JBColor.RED
         enCursorColorPanel?.selectedColor = state.enCursorColor ?: JBColor.BLUE
-        balloonDurationField?.text = state.balloonDuration?.toString() ?: "2000"
+        balloonDurationField?.text = state.balloonDuration?.toString() ?: "500"
     }
 
     private fun createTestButton(text: String, action: () -> Unit): JButton {

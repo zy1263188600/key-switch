@@ -3,6 +3,10 @@
 # key-switch Changelog
 
 ## [Unreleased]
+### Fixed
+- 选中文本后鼠标第一次单击范围外的文本不会触发切换
+- 在拆分窗口之间不会触发切换
+### Changed
+- 气泡框默认时间修改为500ms
 ### Added
-- fix: 选中文本后鼠标第一次单击范围外的文本不会触发切换
-- fix: 在拆分窗口之间不会触发切换
+- 支持PhpStorm

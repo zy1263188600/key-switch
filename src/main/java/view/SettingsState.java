@@ -28,7 +28,7 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
     public transient JBColor enCursorColor;
 
     // 其他配置
-    public Integer balloonDuration = 50;
+    public Integer balloonDuration = 500;
 
     @Nullable
     @Override

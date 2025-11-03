@@ -9,4 +9,4 @@
 ### Changed
 - 气泡框默认时间修改为500ms
 ### Added
-- 支持PhpStorm
+- 支持更多的jetbrains产品

@@ -54,7 +54,7 @@ public final class CursorTrackerService implements Disposable {
         multicaster.addCaretListener(new CaretListener() {
             @Override
             public void caretPositionChanged(@NotNull CaretEvent event) {
-                LogUtil.info("光标移动");
+//                LogUtil.info("光标移动");
                 Editor editor = event.getEditor();
                 SelectionModel selectionModel = editor.getSelectionModel();
                 CaretModel caretModel = editor.getCaretModel();
@@ -91,7 +91,7 @@ public final class CursorTrackerService implements Disposable {
         multicaster.addEditorMouseListener(new EditorMouseListener() {
             @Override
             public void mouseReleased(@NotNull EditorMouseEvent e) {
-                LogUtil.info("鼠标释放");
+//                LogUtil.info("鼠标释放");
                 if (e.getMouseEvent().getButton() != MouseEvent.BUTTON1) {
                     return;
                 }
@@ -106,7 +106,7 @@ public final class CursorTrackerService implements Disposable {
 
             @Override
             public void mousePressed(@NotNull EditorMouseEvent e) {
-                LogUtil.info("鼠标按下");
+//                LogUtil.info("鼠标按下");
                 if (e.getMouseEvent().getButton() == MouseEvent.BUTTON1) {
                     lastSelectionStateMap.put(e.getEditor(), true);
                 }
@@ -131,10 +131,10 @@ public final class CursorTrackerService implements Disposable {
             return;
         }
         InputState prefixTextState = isChineseCharacter(prefixText.charAt(0));
-        LogUtil.info("前一个字符：" + prefixText);
-        LogUtil.info("前一个字符状态：" + prefixTextState);
+//        LogUtil.info("前一个字符：" + prefixText);
+//        LogUtil.info("前一个字符状态：" + prefixTextState);
         InputState currentMode = InputMethodSwitcher.getCurrentMode();
-        LogUtil.info("当前输入法状态：" + currentMode);
+//        LogUtil.info("当前输入法状态：" + currentMode);
         if (!prefixTextState.equals(currentMode)) {
             LogUtil.info("切换");
             InputMethodSwitcher.change();

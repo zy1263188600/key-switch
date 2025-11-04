@@ -2,6 +2,7 @@ package inputmethod.switcher;
 
 import enums.InputState;
 import inputmethod.switcher.impl.WindowsUIAutomationSwitcher;
+import utlis.LogUtil;
 import view.SettingsState;
 
 public class InputMethodSwitcher {
@@ -10,21 +11,12 @@ public class InputMethodSwitcher {
     }
 
     public static InputState getCurrentMode() {
-        try {
-            SettingsState settingsState = SettingsState.getInstance();
-            return SwitcherStrategyFactory.createStrategy(settingsState.inputSwitchStrategyClass).getCurrentMode();
-        } catch (Exception e) {
-            new WindowsUIAutomationSwitcher().getCurrentMode();
-        }
-        return InputState.ENGLISH;
+        SettingsState settingsState = SettingsState.getInstance();
+        return SwitcherStrategyFactory.createStrategy(settingsState.inputSwitchStrategyClass).getCurrentMode();
     }
 
     public static void change() {
-        try {
-            SettingsState settingsState = SettingsState.getInstance();
-            SwitcherStrategyFactory.createStrategy(settingsState.inputSwitchStrategyClass).change();
-        } catch (Exception e) {
-            new WindowsUIAutomationSwitcher().change();
-        }
+        SettingsState settingsState = SettingsState.getInstance();
+        SwitcherStrategyFactory.createStrategy(settingsState.inputSwitchStrategyClass).change();
     }
 }

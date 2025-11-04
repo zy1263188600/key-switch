@@ -11,7 +11,7 @@ public class LogUtil {
 
     public static void info(String message, Class<?> clazz) {
         // 输出到控制台
-//        System.out.println("[info] [" + System.currentTimeMillis() + "] " + message);
+        System.out.println("[info] [" + System.currentTimeMillis() + "] " + message);
         // 输出到 IDEA 日志系统 
         Logger.getInstance(clazz).info(message);
     }

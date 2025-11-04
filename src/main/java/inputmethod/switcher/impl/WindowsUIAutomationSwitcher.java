@@ -21,7 +21,11 @@ import java.util.List;
 public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
 
     private static final Logger LOG = Logger.getInstance(WindowsUIAutomationSwitcher.class);
-    private static final int MAX_RETRY_COUNT = 3;
+    private static final int MAX_RETRY_COUNT = 1;
+
+    public WindowsUIAutomationSwitcher() {
+        LogUtil.info("WindowsUIAutomationSwitcher init");
+    }
 
     public enum ErrorCode {
         COM_INIT_FAILED_STA, AUTOMATION_CREATE_FAILED, TRAY_WINDOW_NOT_FOUND, ELEMENT_FROM_HANDLE_FAILED, BUTTONS_NOT_FOUND, BUTTON_INVOKE_FAILED, NO_VALID_BUTTON
@@ -46,46 +50,47 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
     }
 
     private List<Element> buttons;
+    private UIAutomation automation;
 
     private void clickInputMethodButton() {
         int retryCount = 1;
-        UIAutomation automation;
 
         while (retryCount <= MAX_RETRY_COUNT) {
             if (retryCount == 1) {
                 LogUtil.debug("RETRY_COUNT:" + retryCount);
             }
             try {
-                automation = UIAutomation.getInstance();
-                WinDef.HWND hTrayWnd = findTrayWindow();
-                if (hTrayWnd == null) {
-                    throw new UIAutomationSwitcherException(ErrorCode.TRAY_WINDOW_NOT_FOUND, "Tray window not found");
-                }
-
-                Element root = automation.getElementFromHandle(hTrayWnd);
-                if (root == null) {
-                    throw new UIAutomationSwitcherException(ErrorCode.ELEMENT_FROM_HANDLE_FAILED, "Failed to get element from handle");
-                }
-
-                Variant.VARIANT.ByValue variant = new Variant.VARIANT.ByValue();
-                variant.setValue(3, new WinDef.LONG(50000L));
-                PointerByReference propertyCondition = automation.createPropertyCondition(30003, variant);
 
                 if (buttons == null) {
-                    long startTimeNano = System.nanoTime();
-                    try {
-                        buttons = root.findAll(new TreeScope(TreeScope.DESCENDANTS), propertyCondition);
-                    } finally {
-                        long durationNano = System.nanoTime() - startTimeNano;
-                        double milliseconds = durationNano / 1e6;
-                        LogUtil.debug("findAll execution time: " + String.format("%.6f", milliseconds) + " ms");
-                    }
+                    if (automation == null) {
+                        automation = UIAutomation.getInstance();
+                        WinDef.HWND hTrayWnd = findTrayWindow();
+                        if (hTrayWnd == null) {
+                            throw new UIAutomationSwitcherException(ErrorCode.TRAY_WINDOW_NOT_FOUND, "Tray window not found");
+                        }
 
-                    if (buttons == null || buttons.isEmpty()) {
-                        throw new UIAutomationSwitcherException(ErrorCode.BUTTONS_NOT_FOUND, "No buttons found");
+                        Element root = automation.getElementFromHandle(hTrayWnd);
+                        if (root == null) {
+                            throw new UIAutomationSwitcherException(ErrorCode.ELEMENT_FROM_HANDLE_FAILED, "Failed to get element from handle");
+                        }
+
+                        Variant.VARIANT.ByValue variant = new Variant.VARIANT.ByValue();
+                        variant.setValue(3, new WinDef.LONG(50000L));
+                        PointerByReference propertyCondition = automation.createPropertyCondition(30003, variant);
+                        long startTimeNano = System.nanoTime();
+                        try {
+                            buttons = root.findAll(new TreeScope(TreeScope.DESCENDANTS), propertyCondition);
+                        } finally {
+                            long durationNano = System.nanoTime() - startTimeNano;
+                            double milliseconds = durationNano / 1e6;
+                            LogUtil.debug("findAll execution time: " + String.format("%.6f", milliseconds) + " ms");
+                        }
                     }
                 }
-//win10
+                if (buttons == null || buttons.isEmpty()) {
+                    throw new UIAutomationSwitcherException(ErrorCode.BUTTONS_NOT_FOUND, "No buttons found");
+                }
+                //win10
                 if (buttons.size() > 4) {
                     Element element = buttons.get(buttons.size() - 4);
                     if (isValidInputMethodButton(element)) {
@@ -93,7 +98,7 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
                         return;
                     }
                 }
-//win11
+                //win11
                 if (buttons.size() > 5) {
                     Element element = buttons.get(buttons.size() - 5);
                     if (isValidInputMethodButton(element)) {
@@ -132,8 +137,8 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
                 throw new UIAutomationSwitcherException(ErrorCode.COM_INIT_FAILED_STA, "COM initialization failed in STA mode", e);
             } else if (message.contains("0x80040201")) {
                 LOG.warn("Taskbar  resource invalid, retrying... Attempt: " + (retryCount + 1));
-                buttons = null;  // Clear cache for retry
-                return;  // Continue to next retry
+                buttons = null;
+                return;
             }
         }
 
@@ -151,7 +156,14 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
 
     private boolean isValidInputMethodButton(Element element) throws AutomationException {
         String name = element.getName();
-        return name != null && (name.contains("输入指示器") || name.contains("中文模式") || name.contains("英语模式"));
+        return name != null && (
+                // win10
+                name.contains("输入指示器") ||
+                        name.contains("中文模式") ||
+                        name.contains("英语模式") ||
+                        // win11
+                        name.contains("输入模式") ||
+                        name.contains("语言栏"));
     }
 
     @Override
@@ -186,7 +198,7 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
         } finally {
             long durationNano = System.nanoTime() - startTimeNano;
             double milliseconds = durationNano / 1e6;
-            LogUtil.debug("Execution  time: " + String.format("%.6f", milliseconds) + " ms");
+            LogUtil.info("  执行时间: " + String.format("%.6f", milliseconds) + " ms");
         }
     }
 }

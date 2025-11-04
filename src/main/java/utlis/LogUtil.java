@@ -34,4 +34,13 @@ public class LogUtil {
         // 输出到 IDEA 日志系统
         Logger.getInstance(clazz).error(message);
     }
+
+    public static void warn(String message) {
+        warn(message, LogUtil.class);
+    }
+
+    public static void warn(String message, Class<?> clazz) {
+        // 输出到 IDEA 日志系统
+        Logger.getInstance(clazz).warn(message);
+    }
 }

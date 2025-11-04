@@ -4,9 +4,5 @@
 
 ## [Unreleased]
 ### Fixed
-- 选中文本后鼠标第一次单击范围外的文本不会触发切换
-- 在拆分窗口之间不会触发切换
-### Changed
-- 气泡框默认时间修改为500ms
-### Added
-- 支持更多的jetbrains产品
+- IUIAutomation模式优化切换性能 20ms -> 0.5ms
+- 多行文本选择中不再触发切换 解决KeyboardSwitcher误触问题

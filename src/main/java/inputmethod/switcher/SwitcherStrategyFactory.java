@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 import inputmethod.switcher.impl.KeyboardSwitcher;
 import inputmethod.switcher.impl.WindowsUIAutomationSwitcher;
 import utlis.LogUtil;
-import utlis.WindowsVersionUtil;
 
 public class SwitcherStrategyFactory {
     private static final Map<String, Supplier<InputMethodSwitchStrategy>> STRATEGIES = new HashMap<>();
@@ -28,7 +27,7 @@ public class SwitcherStrategyFactory {
                 throw new IllegalArgumentException("Invalid strategy: " + className);
             }
             InputMethodSwitchStrategy instance = supplier.get();
-            LogUtil.info(" new strategy: " + key);
+            LogUtil.info("new strategy: " + key);
             return instance;
         });
     }

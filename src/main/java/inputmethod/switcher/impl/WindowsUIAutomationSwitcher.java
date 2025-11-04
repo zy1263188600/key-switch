@@ -60,7 +60,6 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
                 LogUtil.debug("RETRY_COUNT:" + retryCount);
             }
             try {
-
                 if (buttons == null) {
                     if (automation == null) {
                         automation = UIAutomation.getInstance();
@@ -127,6 +126,8 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
     }
 
     private void handleException(Exception e, int retryCount) {
+        buttons = null;
+        automation = null;
         if (e instanceof UIAutomationSwitcherException) {
             throw (UIAutomationSwitcherException) e;
         }
@@ -137,11 +138,9 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
                 throw new UIAutomationSwitcherException(ErrorCode.COM_INIT_FAILED_STA, "COM initialization failed in STA mode", e);
             } else if (message.contains("0x80040201")) {
                 LOG.warn("Taskbar  resource invalid, retrying... Attempt: " + (retryCount + 1));
-                buttons = null;
                 return;
             }
         }
-
         throw new UIAutomationSwitcherException(ErrorCode.AUTOMATION_CREATE_FAILED, "Unexpected error during automation", e);
     }
 

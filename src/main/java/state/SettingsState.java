@@ -1,10 +1,11 @@
-package view;
+package state;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.ui.JBColor;
+import enums.InputState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,16 +20,24 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
     public String inputSwitchStrategyClass = "UIAutomationSwitcher";
     public String switchingStrategyClass = "CursorColorStrategy";
 
-    // 颜色存储方案 (核心修改)
+    // 光标颜色
     public int zhCursorColorRGB = JBColor.RED.getRGB();
     public int enCursorColorRGB = JBColor.BLUE.getRGB();
+
+    // 气泡框配置
+    public Integer balloonDuration = 500;
+
+    public InputState editorInputState = InputState.ENGLISH;
+    public InputState renameDialogInputState = InputState.ENGLISH;
+    public InputState terminalInputState = InputState.ENGLISH;
+    public InputState searchInputState = InputState.ENGLISH;
+//    public InputState otherInputState = InputState.ENGLISH;
 
     // 运行时对象 (不序列化)
     public transient JBColor zhCursorColor;
     public transient JBColor enCursorColor;
 
-    // 其他配置
-    public Integer balloonDuration = 500;
+
 
     @Nullable
     @Override
@@ -45,16 +54,18 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
 
     @Override
     public void loadState(@NotNull SettingsState state) {
-        // 复制基础字段
         this.inputSwitchStrategyClass = state.inputSwitchStrategyClass;
         this.switchingStrategyClass = state.switchingStrategyClass;
         this.balloonDuration = state.balloonDuration;
 
-        // 核心修改：重建JBColor对象
+        this.editorInputState = state.editorInputState;
+        this.renameDialogInputState = state.renameDialogInputState;
+        this.terminalInputState = state.terminalInputState;
+        this.searchInputState = state.searchInputState;
+
+
         this.zhCursorColor = createThemeAwareColor(state.zhCursorColorRGB);
         this.enCursorColor = createThemeAwareColor(state.enCursorColorRGB);
-
-        // 同步RGB存储值
         this.zhCursorColorRGB = state.zhCursorColorRGB;
         this.enCursorColorRGB = state.enCursorColorRGB;
     }

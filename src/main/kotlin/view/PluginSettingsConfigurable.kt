@@ -18,6 +18,9 @@ import com.intellij.ui.components.JBTextField
 import java.awt.FlowLayout
 import javax.swing.JComponent
 import com.intellij.util.ui.JBUI
+import editoraction.FocusHandel.FocusArea
+import enums.InputState
+import state.SettingsState
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 
@@ -28,6 +31,14 @@ class PluginSettingsConfigurable() : Configurable {
 
     private var inputSwitchStrategyComboBox: JComboBox<String>? = null
     private var switchingStrategyComboBox: JComboBox<String>? = null
+
+    private var editorComboBox: JComboBox<InputState>? = null
+    private var renameDialogComboBox: JComboBox<InputState>? = null
+    private var terminalComboBox: JComboBox<InputState>? = null
+    private var searchComboBox: JComboBox<InputState>? = null
+//    private var otherComboBox: JComboBox<InputState>? = null
+
+
     private var zhCursorColorPanel: ColorPanel? = null
     private var enCursorColorPanel: ColorPanel? = null
     private val state = SettingsState.getInstance() ?: throw IllegalStateException("SettingsState must not be null")
@@ -77,6 +88,84 @@ class PluginSettingsConfigurable() : Configurable {
                 row {
                     cell(createDynamicSettingsPanel())
                 }
+            }
+
+            group("场景默认输入法设置") {
+                row {
+                    label(FocusArea.EDITOR.name)
+                    cell(
+                        createStrategyComboBox(
+                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
+                            displayMap = mapOf(
+                                InputState.CHINESE to InputState.CHINESE.name,
+                                InputState.ENGLISH to InputState.ENGLISH.name
+                            ),
+                            selected = state.editorInputState!!
+                        )
+                    ).applyToComponent {
+                        editorComboBox = this
+                    }
+                }
+                row {
+                    label(FocusArea.RENAME_DIALOG.name)
+                    cell(
+                        createStrategyComboBox(
+                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
+                            displayMap = mapOf(
+                                InputState.CHINESE to InputState.CHINESE.name,
+                                InputState.ENGLISH to InputState.ENGLISH.name
+                            ),
+                            selected = state.renameDialogInputState!!
+                        )
+                    ).applyToComponent {
+                        renameDialogComboBox = this
+                    }
+                }
+                row {
+                    label(FocusArea.TERMINAL.name)
+                    cell(
+                        createStrategyComboBox(
+                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
+                            displayMap = mapOf(
+                                InputState.CHINESE to InputState.CHINESE.name,
+                                InputState.ENGLISH to InputState.ENGLISH.name
+                            ),
+                            selected = state.terminalInputState!!
+                        )
+                    ).applyToComponent {
+                        terminalComboBox = this
+                    }
+                }
+                row {
+                    label(FocusArea.SEARCH.name)
+                    cell(
+                        createStrategyComboBox(
+                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
+                            displayMap = mapOf(
+                                InputState.CHINESE to InputState.CHINESE.name,
+                                InputState.ENGLISH to InputState.ENGLISH.name
+                            ),
+                            selected = state.searchInputState!!
+                        )
+                    ).applyToComponent {
+                        searchComboBox = this
+                    }
+                }
+//                row {
+//                    label(FocusArea.OTHER.name)
+//                    cell(
+//                        createStrategyComboBox(
+//                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
+//                            displayMap = mapOf(
+//                                InputState.CHINESE to InputState.CHINESE.name,
+//                                InputState.ENGLISH to InputState.ENGLISH.name
+//                            ),
+//                            selected = state.otherInputState!!
+//                        )
+//                    ).applyToComponent {
+//                        otherComboBox = this
+//                    }
+//                }
             }
         }.apply {
             // 初始加载时更新动态设置
@@ -185,17 +274,22 @@ class PluginSettingsConfigurable() : Configurable {
         }
     }
 
-    private fun createStrategyComboBox(
-        items: Array<String>, displayMap: Map<String, String>, selected: String
-    ): ComboBox<String> {
+    private inline fun <reified T> createStrategyComboBox(
+        items: Array<T>,
+        displayMap: Map<T, String> = emptyMap(),
+        selected: T
+    ): ComboBox<T> {
         return ComboBox(items).apply {
             renderer = object : DefaultListCellRenderer() {
                 override fun getListCellRendererComponent(
-                    list: JList<*>?, value: Any?, index: Int, isSelected: Boolean, cellHasFocus: Boolean
+                    list: JList<*>?, value: Any?, index: Int,
+                    isSelected: Boolean, cellHasFocus: Boolean
                 ): Component {
-                    val displayValue = value?.toString()?.let { displayMap[it] ?: it }
+                    // 安全处理类型转换
+                    val item = value as? T
+                    val displayText = item?.let { displayMap[it] } ?: value?.toString()
                     return super.getListCellRendererComponent(
-                        list, displayValue, index, isSelected, cellHasFocus
+                        list, displayText, index, isSelected, cellHasFocus
                     )
                 }
             }
@@ -219,14 +313,28 @@ class PluginSettingsConfigurable() : Configurable {
         }
         return !Objects.equals(inputSwitchStrategyComboBox!!.selectedItem, state.inputSwitchStrategyClass) ||
                 !Objects.equals(switchingStrategyComboBox!!.selectedItem, state.switchingStrategyClass) ||
+
+                !Objects.equals(editorComboBox!!.selectedItem, state.editorInputState) ||
+                !Objects.equals(renameDialogComboBox!!.selectedItem, state.renameDialogInputState) ||
+                !Objects.equals(terminalComboBox!!.selectedItem, state.terminalInputState) ||
+                !Objects.equals(searchComboBox!!.selectedItem, state.searchInputState) ||
+
                 !Objects.equals(zhCursorColorPanel?.selectedColor, state.zhCursorColor) ||
                 !Objects.equals(enCursorColorPanel?.selectedColor, state.enCursorColor) ||
                 (balloonDurationField?.isVisible == true && balloonDurationField?.text != state.balloonDuration?.toString())
+
+
     }
 
     override fun apply() {
         state.inputSwitchStrategyClass = inputSwitchStrategyComboBox!!.selectedItem as String
         state.switchingStrategyClass = switchingStrategyComboBox!!.selectedItem as String
+
+        state.editorInputState = editorComboBox!!.selectedItem as InputState
+        state.renameDialogInputState = renameDialogComboBox!!.selectedItem as InputState
+        state.terminalInputState = terminalComboBox!!.selectedItem as InputState
+        state.searchInputState = searchComboBox!!.selectedItem as InputState
+
         state.zhCursorColor = zhCursorColorPanel?.selectedColor.let { it?.let { regular -> JBColor(regular, it) } }
         state.enCursorColor = enCursorColorPanel?.selectedColor.let { it?.let { regular -> JBColor(regular, it) } }
 
@@ -242,9 +350,16 @@ class PluginSettingsConfigurable() : Configurable {
     override fun reset() {
         inputSwitchStrategyComboBox!!.selectedItem = state.inputSwitchStrategyClass!!
         switchingStrategyComboBox!!.selectedItem = state.switchingStrategyClass!!
+
+        editorComboBox!!.selectedItem = state.editorInputState!!
+        renameDialogComboBox!!.selectedItem = state.renameDialogInputState!!
+        terminalComboBox!!.selectedItem = state.terminalInputState!!
+        searchComboBox!!.selectedItem = state.searchInputState!!
+
         zhCursorColorPanel?.selectedColor = state.zhCursorColor ?: JBColor.RED
         enCursorColorPanel?.selectedColor = state.enCursorColor ?: JBColor.BLUE
         balloonDurationField?.text = state.balloonDuration?.toString() ?: "2000"
+
         updateDynamicSettings()
     }
 

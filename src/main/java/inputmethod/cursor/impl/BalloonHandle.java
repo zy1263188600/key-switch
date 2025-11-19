@@ -13,7 +13,7 @@ import com.intellij.util.Alarm;
 import com.intellij.util.ui.JBUI;
 import enums.InputState;
 import inputmethod.cursor.CursorHandleStrategy;
-import view.SettingsState;
+import state.SettingsState;
 
 import javax.swing.*;
 import java.awt.*;

@@ -7,9 +7,13 @@
 
 
     <extensions defaultExtensionNs="com.intellij">
+        <!--        设置-工具中 配置页面-->
         <postStartupActivity implementation="editoraction.PluginStartup"/>
+
+        <notificationGroup id="key-switch" displayType="BALLOON" isLogByDefault="true"/>
+        <postStartupActivity implementation="PluginStartupListener"/>
         <!-- 应用级配置 -->
-        <applicationService serviceImplementation="view.SettingsState"/>
+        <applicationService serviceImplementation="state.SettingsState"/>
         <!-- 注册到设置页面 -->
         <applicationConfigurable
                 groupId="tools"

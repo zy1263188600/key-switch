@@ -1,9 +1,7 @@
 package inputmethod.switcher;
 
 import enums.InputState;
-import inputmethod.switcher.impl.WindowsUIAutomationSwitcher;
-import utlis.LogUtil;
-import view.SettingsState;
+import state.SettingsState;
 
 public class InputMethodSwitcher {
     // 私有构造防止实例化

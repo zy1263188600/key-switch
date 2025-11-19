@@ -19,8 +19,6 @@ import static com.sun.jna.platform.win32.WinUser.VK_LSHIFT;
 
 public class KeyboardSwitcher implements InputMethodSwitchStrategy {
 
-    private static final Logger LOG = Logger.getInstance(KeyboardSwitcher.class);
-
     private static long lastPressTime = 0;
     private static final long MIN_PRESS_INTERVAL_MS = 100;
 

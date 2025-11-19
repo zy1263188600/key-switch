@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import enums.InputState;
 import inputmethod.cursor.CursorHandleStrategy;
-import view.SettingsState;
+import state.SettingsState;
 
 import java.awt.*;
 

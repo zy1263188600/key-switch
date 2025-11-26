@@ -171,6 +171,7 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
     }
 
     public static boolean isEnglishMode() {
+
         return KeyboardSwitcher.isEnglishMode();
     }
 

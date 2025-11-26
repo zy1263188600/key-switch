@@ -2,18 +2,11 @@ package editoraction;
 
 import com.intellij.openapi.CompositeDisposable;
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.*;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.javadoc.PsiDocTokenImpl;
-import com.intellij.psi.javadoc.PsiDocToken;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.Alarm;
 import enums.InputState;
 import inputmethod.cursor.CursorHandle;
@@ -25,7 +18,6 @@ import state.SettingsState;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.*;
 
 import static editoraction.FocusHandel.*;
@@ -169,51 +161,51 @@ public final class CursorTrackerService implements Disposable {
         }, 1);
     }
 
-    public static InputState detectAndPrintElementType(Editor editor) {
-        Project project = editor.getProject();
-        if (project == null || project.isDisposed()) {
-            LogUtil.debug("Project 不可用或已释放");
-            return null;
-        }
-        PsiFile psiFile = PsiDocumentManager.getInstance(project)
-                .getPsiFile(editor.getDocument());
-        if (psiFile == null) {
-            LogUtil.debug("当前不在可解析的文件中");
-            return null;
-        }
-
-        int offset = editor.getCaretModel().getOffset() > 0 ? editor.getCaretModel().getOffset() - 1 : 0;
-
-        PsiElement element = psiFile.findElementAt(offset);
-        if (element == null) {
-            LogUtil.debug("无法确定当前Psi元素类型");
-            return null;
-        }
-        System.out.println("未知元素Element:  " + element + ", Class: " + element.getClass());
-        switch (element) {
-            case PsiComment psiComment -> {
-                System.out.println("普通注释:" + psiComment.getText());
-                return InputState.CHINESE;
-            }
-            case PsiDocToken psiDocToken -> {
-                System.out.println("文档注释:" + psiDocToken.getText()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              );
-                return InputState.CHINESE;
-            }
-
-            case PsiWhiteSpace psiWhiteSpace -> {
-                System.out.println("空白区域:" + psiWhiteSpace.getText());
-                return null;
-            }
-            case PsiJavaToken psiJavaToken -> {
-                System.out.println("java关键字:" + psiJavaToken.getText());
-                return null;
-            }
-            default -> {
-//                System.out.println("未知元素Element:  " + element + ", Class: " + element.getClass());
-                return null;
-            }
-        }
-    }
+//    public static InputState detectAndPrintElementType(Editor editor) {
+//        Project project = editor.getProject();
+//        if (project == null || project.isDisposed()) {
+//            LogUtil.debug("Project 不可用或已释放");
+//            return null;
+//        }
+//        PsiFile psiFile = PsiDocumentManager.getInstance(project)
+//                .getPsiFile(editor.getDocument());
+//        if (psiFile == null) {
+//            LogUtil.debug("当前不在可解析的文件中");
+//            return null;
+//        }
+//
+//        int offset = editor.getCaretModel().getOffset() > 0 ? editor.getCaretModel().getOffset() - 1 : 0;
+//
+//        PsiElement element = psiFile.findElementAt(offset);
+//        if (element == null) {
+//            LogUtil.debug("无法确定当前Psi元素类型");
+//            return null;
+//        }
+//        System.out.println("未知元素Element:  " + element + ", Class: " + element.getClass());
+//        switch (element) {
+//            case PsiComment psiComment -> {
+//                System.out.println("普通注释:" + psiComment.getText());
+//                return InputState.CHINESE;
+//            }
+//            case PsiDocToken psiDocToken -> {
+//                System.out.println("文档注释:" + psiDocToken.getText()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              );
+//                return InputState.CHINESE;
+//            }
+//
+//            case PsiWhiteSpace psiWhiteSpace -> {
+//                System.out.println("空白区域:" + psiWhiteSpace.getText());
+//                return null;
+//            }
+//            case PsiJavaToken psiJavaToken -> {
+//                System.out.println("java关键字:" + psiJavaToken.getText());
+//                return null;
+//            }
+//            default -> {
+////                System.out.println("未知元素Element:  " + element + ", Class: " + element.getClass());
+//                return null;
+//            }
+//        }
+//    }
 
     private boolean isWithinSelectionBoundary(Editor editor) {
         CaretModel caret = editor.getCaretModel();

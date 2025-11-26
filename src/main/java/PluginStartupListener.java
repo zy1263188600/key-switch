@@ -5,6 +5,7 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import kotlin.Unit;
@@ -31,7 +32,17 @@ public class PluginStartupListener implements com.intellij.openapi.startup.Proje
                 );
 
                 // 添加操作按钮
-                notification.addAction(new AnAction("⭐star支持") {
+                notification.addAction(new AnAction("插件设置") {
+                    @Override
+                    public void actionPerformed(@NotNull AnActionEvent e) {
+                        ShowSettingsUtil.getInstance().showSettingsDialog(
+                                e.getProject(),
+                                "key-switch" // 必须与plugin.xml 中定义的<name>完全一致
+                        );
+                    }
+                });
+
+                notification.addAction(new AnAction("⭐ Star支持") {
                     @Override
                     public void actionPerformed(@NotNull AnActionEvent e) {
                         openUrl("https://github.com/zy1263188600/key-switch", notification);

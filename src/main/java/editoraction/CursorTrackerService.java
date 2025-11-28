@@ -2,9 +2,16 @@ package editoraction;
 
 import com.intellij.openapi.CompositeDisposable;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.editor.*;
+import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import com.intellij.openapi.editor.actionSystem.EditorActionManager;
 import com.intellij.openapi.editor.event.*;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.util.Alarm;
@@ -12,10 +19,13 @@ import enums.InputState;
 import inputmethod.cursor.CursorHandle;
 import inputmethod.switcher.InputMethodSwitcher;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import utlis.LogUtil;
 import state.SettingsState;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -24,19 +34,19 @@ import static editoraction.FocusHandel.*;
 
 @Service(Service.Level.APP)
 public final class CursorTrackerService implements Disposable {
-    //    private static final long EVENT_THRESHOLD = 100; // 事件过滤阈值（毫秒）
+    private static final long EVENT_THRESHOLD = 100; // 事件过滤阈值（毫秒）
     private static final Character.UnicodeBlock[] CHINESE_BLOCKS = { // 中文相关Unicode区块
             Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
             Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION,
             Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
     };
     private final CompositeDisposable composite = new CompositeDisposable();
-    //    private final Map<Editor, Long> lastInputTimeMap = new ConcurrentHashMap<>();
+    private final Map<Editor, Long> lastInputTimeMap = new ConcurrentHashMap<>();
     private final Map<Editor, Boolean> selectionStateMap = new ConcurrentHashMap<>();
 
     public CursorTrackerService() {
         EditorEventMulticaster editorEventMulticaster = EditorFactory.getInstance().getEventMulticaster();
-//        setupDocumentListener(editorEventMulticaster);
+        setupDocumentListener(editorEventMulticaster);
         setupCaretListener(editorEventMulticaster);
         setupMouseListener(editorEventMulticaster);
         setupEditorLifecycleListener();
@@ -52,19 +62,25 @@ public final class CursorTrackerService implements Disposable {
 
     private void disposeResources() {
         composite.dispose();
-//        lastInputTimeMap.clear();
+        lastInputTimeMap.clear();
         selectionStateMap.clear();
     }
 
-//    private void setupDocumentListener(EditorEventMulticaster multicaster) {
-//        multicaster.addDocumentListener(new DocumentListener() {
-//            //文档变化
-//            @Override
-//            public void documentChanged(@NotNull DocumentEvent event) {
-//                updateLastInputTime(event.getDocument());
-//            }
-//        }, composite);
-//    }
+    private void setupDocumentListener(EditorEventMulticaster multicaster) {
+        multicaster.addDocumentListener(new DocumentListener() {
+            @Override
+            public void documentChanged(@NotNull DocumentEvent event) {
+                updateLastInputTime(event.getDocument());
+            }
+        }, composite);
+    }
+
+    private void updateLastInputTime(Document document) {
+        long currentTime = System.currentTimeMillis();
+        for (Editor editor : EditorFactory.getInstance().getEditors(document)) {
+            lastInputTimeMap.put(editor, currentTime);
+        }
+    }
 
     private void setupCaretListener(EditorEventMulticaster multicaster) {
         multicaster.addCaretListener(new CaretListener() {
@@ -107,10 +123,11 @@ public final class CursorTrackerService implements Disposable {
             @Override
             public void editorReleased(@NotNull EditorFactoryEvent event) {
                 Editor editor = event.getEditor();
-//                lastInputTimeMap.remove(editor);
+                lastInputTimeMap.remove(editor);
                 selectionStateMap.remove(editor);
             }
         }, composite);
+
     }
 
     //焦点变化监听器
@@ -141,8 +158,8 @@ public final class CursorTrackerService implements Disposable {
 
     private void handleCaretMovement(Editor editor) {
         //fix 延迟执行等待selectionModel.hasSelection()、selectionModel.getSelectionStart()/getSelectionEnd()更新最新的光标位置状态
-        Alarm alarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
-        alarm.addRequest(() -> {
+//        Alarm alarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
+//        alarm.addRequest(() -> {
             if (editor.isDisposed()) {
                 return;
             }
@@ -150,17 +167,13 @@ public final class CursorTrackerService implements Disposable {
                 LogUtil.debug(" 检测到文本选择，跳过输入法切换");
                 return;
             }
-//            InputState inputState = detectAndPrintElementType(editor);
-//            if (inputState != null) {
-//                //如果在特殊区域则按配置进行输入法切换
-//                switchInputOnState(inputState);
-//            } else {
-                //非特殊区域才进行前一个字符判断是否输入法切换
+            if (shouldProcessMovement(editor)) {
                 switchInputOnChar(editor);
-//            }
-        }, 1);
+            }
+//        }, 1);
     }
 
+    // 特殊区域检测 但是现在和前一个字符判断有逻辑冲突 还没想好怎么使用
 //    public static InputState detectAndPrintElementType(Editor editor) {
 //        Project project = editor.getProject();
 //        if (project == null || project.isDisposed()) {
@@ -201,12 +214,12 @@ public final class CursorTrackerService implements Disposable {
 //                return null;
 //            }
 //            default -> {
-////                System.out.println("未知元素Element:  " + element + ", Class: " + element.getClass());
+
+    /// /                System.out.println("未知元素Element:  " + element + ", Class: " + element.getClass());
 //                return null;
 //            }
 //        }
 //    }
-
     private boolean isWithinSelectionBoundary(Editor editor) {
         CaretModel caret = editor.getCaretModel();
         int currentOffset = caret.getOffset();
@@ -229,10 +242,9 @@ public final class CursorTrackerService implements Disposable {
                  */
         var flag = (currentOffset == selStart && selStart == selEnd);
         boolean b = !flag && currentOffset >= selStart - 1 && currentOffset <= selEnd + 1;
-//        System.out.printf("""
-//                offset:%d  | selStart:%d | selEnd:%d%n
-//                """, currentOffset, selStart, selEnd);
-//        System.out.println(b);
+        System.out.printf("""
+                offset:%d  | selStart:%d | selEnd:%d%n
+                """, currentOffset, selStart, selEnd);
         return b;
 
 
@@ -261,6 +273,23 @@ public final class CursorTrackerService implements Disposable {
         if (switchInputOnState(prevCharState)) {
             CursorHandle.change(editor, prevCharState);
         }
+    }
+
+    //因为每次汉字输入候选框时在编辑器中有字母字符，这里就必须丢弃键盘事件触发的光标移动，不然会出现打不了汉字，刚输入汉字就被切换为英文输入法了
+    //    IDEA平台存在BUG
+    //    Ctrl+V（粘贴）、Ctrl+X（选中文本时剪贴、没选择文本时删除当前行）、Ctrl+Z（撤销）、Ctrl+SHIFT+Z（重做）
+    //    Ctrl+Alt+Enter（换行并将光标移动至上一行）
+    //    并没有触发光标移动
+    //todo 上述没有触发光标移动事件，光标移动了的操作都需要额外判断，不应丢弃事件
+    private boolean shouldProcessMovement(Editor editor) {
+        long lastInputTime = lastInputTimeMap.getOrDefault(editor, 0L);
+        long elapsed = System.currentTimeMillis() - lastInputTime;
+        if (elapsed > EVENT_THRESHOLD) {
+            return true;
+        }
+
+        LogUtil.debug("丢弃由键盘输入触发的光标移动事件（时间阈值）");
+        return false;
     }
 
     private static InputState getCharacterState(char c) {

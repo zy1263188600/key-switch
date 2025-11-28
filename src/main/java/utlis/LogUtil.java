@@ -22,7 +22,7 @@ public class LogUtil {
     }
 
     public static void debug(String message, Class<?> clazz) {
-//        System.out.println("[debug] [" + System.currentTimeMillis() + "] " + message);
+        System.out.println("[debug] [" + System.currentTimeMillis() + "] " + message);
         // 输出到 IDEA 日志系统
         Logger.getInstance(clazz).debug(message);
     }

@@ -51,6 +51,7 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
 
     private List<Element> buttons;
     private UIAutomation automation;
+    private Element buttonCache;
 
     private void clickInputMethodButton() {
         int retryCount = 1;
@@ -170,8 +171,10 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
         return isEnglishMode() ? InputState.ENGLISH : InputState.CHINESE;
     }
 
-    public static boolean isEnglishMode() {
+    public boolean isEnglishMode() {
+        if (buttonCache != null) {
 
+        }
         return KeyboardSwitcher.isEnglishMode();
     }
 

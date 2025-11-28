@@ -158,8 +158,8 @@ public final class CursorTrackerService implements Disposable {
 
     private void handleCaretMovement(Editor editor) {
         //fix 延迟执行等待selectionModel.hasSelection()、selectionModel.getSelectionStart()/getSelectionEnd()更新最新的光标位置状态
-//        Alarm alarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
-//        alarm.addRequest(() -> {
+        Alarm alarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
+        alarm.addRequest(() -> {
             if (editor.isDisposed()) {
                 return;
             }
@@ -170,7 +170,7 @@ public final class CursorTrackerService implements Disposable {
             if (shouldProcessMovement(editor)) {
                 switchInputOnChar(editor);
             }
-//        }, 1);
+        }, 1);
     }
 
     // 特殊区域检测 但是现在和前一个字符判断有逻辑冲突 还没想好怎么使用

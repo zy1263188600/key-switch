@@ -18,11 +18,13 @@ import java.awt.Desktop;
 import java.net.URI;
 
 public class PluginStartupListener implements com.intellij.openapi.startup.ProjectActivity {
-    private static boolean isFirstRun = true;
+    private static Long lastNotificationTime = 0L;
 
     @Override
     public @Nullable Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
-        if (isFirstRun) {
+        long now = System.currentTimeMillis();
+        if (now > lastNotificationTime + 1000 * 60 * 60 * 24) {
+            lastNotificationTime = now;
             ApplicationManager.getApplication().invokeLater(() -> {
                 Notification notification = new Notification(
                         "key-switch",
@@ -57,7 +59,6 @@ public class PluginStartupListener implements com.intellij.openapi.startup.Proje
                 });
 
                 Notifications.Bus.notify(notification, project);
-                isFirstRun = false;
             });
         }
         return null;

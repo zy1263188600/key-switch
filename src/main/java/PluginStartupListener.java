@@ -42,14 +42,14 @@ public class PluginStartupListener implements com.intellij.openapi.startup.Proje
                     }
                 });
 
-                notification.addAction(new AnAction("⭐ Star支持") {
+                notification.addAction(new AnAction("Star支持") {
                     @Override
                     public void actionPerformed(@NotNull AnActionEvent e) {
                         openUrl("https://github.com/zy1263188600/key-switch", notification);
                     }
                 });
 
-                notification.addAction(new AnAction("⭐ 五星好评") {
+                notification.addAction(new AnAction("五星好评") {
                     @Override
                     public void actionPerformed(@NotNull AnActionEvent e) {
                         openUrl("https://plugins.jetbrains.com/plugin/28418-key-switch", notification);

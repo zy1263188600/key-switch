@@ -1,5 +1,6 @@
 package view
 
+import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.Messages
@@ -21,8 +22,11 @@ import com.intellij.util.ui.JBUI
 import editoraction.FocusHandel.FocusArea
 import enums.InputState
 import state.SettingsState
+import java.awt.Cursor
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
+import java.awt.event.MouseEvent
+import java.awt.event.MouseAdapter
 
 class PluginSettingsConfigurable() : Configurable {
 
@@ -151,25 +155,92 @@ class PluginSettingsConfigurable() : Configurable {
                         searchComboBox = this
                     }
                 }
-//                row {
-//                    label(FocusArea.OTHER.name)
-//                    cell(
-//                        createStrategyComboBox(
-//                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
-//                            displayMap = mapOf(
-//                                InputState.CHINESE to InputState.CHINESE.name,
-//                                InputState.ENGLISH to InputState.ENGLISH.name
-//                            ),
-//                            selected = state.otherInputState!!
-//                        )
-//                    ).applyToComponent {
-//                        otherComboBox = this
-//                    }
-//                }
+            }
+            separator(JBColor.GRAY)  // 添加分隔线
+            row {
+                cell(createFooterPanel())
             }
         }.apply {
             // 初始加载时更新动态设置
             updateDynamicSettings()
+        }
+    }
+
+    private fun createFooterPanel(): JPanel {
+        return JPanel(FlowLayout(FlowLayout.RIGHT, 10, 5)).apply {
+            border = JBUI.Borders.empty(5, 0) // 添加上下内边距
+
+            add(JLabel("智能输入法切换插件").apply {
+                foreground = JBColor.GRAY
+            })
+
+            val label = JLabel("使用说明")
+            label.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+            label.foreground = JBColor(0x0066CC, 0x3399FF)
+            label.toolTipText = "使用插件前系统需要配置的步骤"
+
+            label.addMouseListener(object : MouseAdapter() {
+                override fun mouseClicked(e: MouseEvent) {
+                    BrowserUtil.browse("https://github.com/zy1263188600/key-switch?tab=readme-ov-file#%EF%B8%8F-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9")
+                }
+
+                override fun mouseEntered(e: MouseEvent) {
+                    label.foreground = JBColor.BLUE
+                    label.text = "<html><u>使用说明</u></html>"
+                }
+
+                override fun mouseExited(e: MouseEvent) {
+                    label.foreground = JBColor(0x0066CC, 0x3399FF)
+                    label.text = "使用说明"
+                }
+            })
+            add(label)
+
+            val starLabel = JLabel("Star支持")
+            starLabel.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+            starLabel.foreground = JBColor(0x0066CC, 0x3399FF)
+            starLabel.toolTipText = "前往GitHub仓库支持我们"
+
+            starLabel.addMouseListener(object : MouseAdapter() {
+                override fun mouseClicked(e: MouseEvent) {
+                    BrowserUtil.browse("https://github.com/zy1263188600/key-switch")
+                }
+
+                override fun mouseEntered(e: MouseEvent) {
+                    starLabel.foreground = JBColor.BLUE
+                    starLabel.text = "<html><u>Star支持</u></html>"
+                }
+
+                override fun mouseExited(e: MouseEvent) {
+                    starLabel.foreground = JBColor(0x0066CC, 0x3399FF)
+                    starLabel.text = "Star支持"
+                }
+            })
+            add(starLabel)
+
+            val label2 = JLabel("五星好评")
+            label2.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+            label2.foreground = JBColor(0x0066CC, 0x3399FF)
+            label2.toolTipText = "前往jetbrains商店支持我们"
+
+            label2.addMouseListener(object : MouseAdapter() {
+                override fun mouseClicked(e: MouseEvent) {
+                    BrowserUtil.browse("https://plugins.jetbrains.com/plugin/28418-key-switch")
+                }
+
+                override fun mouseEntered(e: MouseEvent) {
+                    label2.foreground = JBColor.BLUE
+                    label2.text = "<html><u>五星好评</u></html>"
+                }
+
+                override fun mouseExited(e: MouseEvent) {
+                    label2.foreground = JBColor(0x0066CC, 0x3399FF)
+                    label2.text = "五星好评"
+                }
+            })
+            add(label2)
+
+
         }
     }
 

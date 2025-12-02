@@ -1,19 +1,14 @@
 
-# 🔑 key-switch —— 智能输入法自动切换工具
+# 🔑 key-switch —— 智能输入法自动切换插件
 
-<!-- Plugin description -->
-**key-switch** Automatically switch between Chinese and English input states based on the character type in front of the cursor, making your input experience as smooth as flowing clouds and water!  
-**key-switch**
-根据光标前的字符类型，自动切换中英文输入状态，让您的输入体验如行云流水般顺畅！彻底告别Shift！
-若插件为您带来便利，请给个 **Star ⭐️ 支持**！您的认可是我们持续优化的动力！🙏 https://github.com/zy1263188600/key-switch
-<!-- Plugin description end -->
 ## 使用插件
    IDEA 插件市场搜索 ```key-switch```
 ## 🚀 核心功能
 智能感知光标前的字符特征，精准触发输入法切换，告别手动切换中英文的繁琐操作。
 ## ⚠️ 注意事项
-1、暂时只支持windows，不支持mac、linux   
-2、确保右下角有 输入法指示器
+1、暂时只支持windows，不支持mac、linux
+2、仅支持jetbrains全系列产品
+3、确保右下角有 输入法指示器
 <img width="265" height="40" alt="image" src="https://github.com/user-attachments/assets/dc964302-1238-45ee-9f61-1cbf7037f902" />   
 - ###  输入法指示器设置步骤（仅win10）：
 - #### 打开设置菜单
@@ -66,3 +61,9 @@ gradle  runIde --stacktrace
   为注释/代码编辑区/git commit等场景预置输入法方案，让输入法更得心应手，彻底告别Shift
 - `智能习惯学习`：
   记忆用户在特定位置的手动切换行为，逐步进化成懂您的输入伴侣
+<!-- Plugin description -->
+**key-switch** Automatically switch between Chinese and English input states based on the character type in front of the cursor, making your input experience as smooth as flowing clouds and water!  
+**key-switch**
+根据光标前的字符类型，自动切换中英文输入状态，让您的输入体验如行云流水般顺畅！彻底告别Shift！
+若插件为您带来便利，请给个 **Star ⭐️ 支持**！您的认可是我们持续优化的动力！🙏 https://github.com/zy1263188600/key-switch
+<!-- Plugin description end -->

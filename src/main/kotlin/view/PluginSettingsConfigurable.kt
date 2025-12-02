@@ -158,6 +158,14 @@ class PluginSettingsConfigurable() : Configurable {
             }
             separator(JBColor.GRAY)  // 添加分隔线
             row {
+                cell(JPanel(FlowLayout(FlowLayout.RIGHT, 10, 5)).apply {
+                    border = JBUI.Borders.empty(5, 0) // 添加上下内边距
+                    add(JLabel("若插件为您带来便利，请给个 Star ⭐\uFE0F 支持！您的认可是我们持续优化的动力！").apply {
+                        foreground = JBColor.GRAY
+                    })
+                })
+            }
+            row {
                 cell(createFooterPanel())
             }
         }.apply {
@@ -168,11 +176,7 @@ class PluginSettingsConfigurable() : Configurable {
 
     private fun createFooterPanel(): JPanel {
         return JPanel(FlowLayout(FlowLayout.RIGHT, 10, 5)).apply {
-            border = JBUI.Borders.empty(5, 0) // 添加上下内边距
-
-            add(JLabel("智能输入法切换插件").apply {
-                foreground = JBColor.GRAY
-            })
+            border = JBUI.Borders.empty(5, 0)
 
             val label = JLabel("使用说明")
             label.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)

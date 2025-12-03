@@ -228,10 +228,10 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
 
         for (String keyword : INPUT_METHOD_KEYWORDS) {
             if (name.contains(keyword)) {
-                if (name.contains(" 英语") || name.contains(" 英文") || name.contains("ENG")) {
+                if (name.contains("英") || name.contains("ENG")) {
                     return InputState.ENGLISH;
                 }
-                if (name.contains(" 中文") || name.contains("CHN") || name.contains(" 中")) {
+                if (name.contains("中")) {
                     return InputState.CHINESE;
                 }
                 break;

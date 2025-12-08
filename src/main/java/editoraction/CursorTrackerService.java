@@ -30,7 +30,7 @@ import java.awt.event.MouseEvent;
 import java.util.Map;
 import java.util.concurrent.*;
 
-import static editoraction.FocusHandel.*;
+//import static editoraction.FocusHandel.*;
 
 @Service(Service.Level.APP)
 public final class CursorTrackerService implements Disposable {
@@ -50,7 +50,7 @@ public final class CursorTrackerService implements Disposable {
         setupCaretListener(editorEventMulticaster);
         setupMouseListener(editorEventMulticaster);
         setupEditorLifecycleListener();
-        setupFocusListener();
+//        setupFocusListener();
 
         Disposer.register(this, this::disposeResources);
     }
@@ -131,29 +131,28 @@ public final class CursorTrackerService implements Disposable {
     }
 
     //焦点变化监听器
-    private void setupFocusListener() {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager()
-                .addPropertyChangeListener("focusOwner", e -> {
+//    private void setupFocusListener() {
+//        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+//                .addPropertyChangeListener("focusOwner", e -> {
 //                    LogUtil.info(getFocusedComponentHierarchy());
-                    FocusArea focusArea = detectFocusArea();
-                    if (focusArea == FocusHandel.FocusArea.EDITOR) {
-                        LogUtil.info(focusArea.name);
-                        switchInputOnState(SettingsState.getInstance().editorInputState);
-                    } else if (focusArea == FocusHandel.FocusArea.RENAME_DIALOG) {
-                        LogUtil.info(focusArea.name);
-                        //这里会弹出新的窗体导致windows的焦点切换所以暂定需要延迟进行切换 窗体构建完成切换是最准确的
-                        Alarm alarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
-                        alarm.addRequest(() -> switchInputOnState(SettingsState.getInstance().renameDialogInputState), 1);
-                    } else if (focusArea == FocusHandel.FocusArea.TERMINAL) {
-                        LogUtil.info(focusArea.name);
-                        switchInputOnState(SettingsState.getInstance().terminalInputState);
-                    } else if (focusArea == FocusHandel.FocusArea.SEARCH) {
-                        LogUtil.info(focusArea.name);
-                        switchInputOnState(SettingsState.getInstance().searchInputState);
-
-                    }
-                });
-    }
+//                    FocusArea focusArea = detectFocusArea();
+//                    if (focusArea == FocusHandel.FocusArea.EDITOR) {
+//                        LogUtil.info(focusArea.name);
+//                        switchInputOnState(SettingsState.getInstance().editorInputState);
+//                    } else if (focusArea == FocusHandel.FocusArea.RENAME_DIALOG) {
+//                        LogUtil.info(focusArea.name);
+//                        //这里会弹出新的窗体导致windows的焦点切换所以暂定需要延迟进行切换 窗体构建完成切换是最准确的
+//                        Alarm alarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
+//                        alarm.addRequest(() -> switchInputOnState(SettingsState.getInstance().renameDialogInputState), 1);
+//                    } else if (focusArea == FocusHandel.FocusArea.TERMINAL) {
+//                        LogUtil.info(focusArea.name);
+//                        switchInputOnState(SettingsState.getInstance().terminalInputState);
+//                    } else if (focusArea == FocusHandel.FocusArea.SEARCH) {
+//                        LogUtil.info(focusArea.name);
+//                        switchInputOnState(SettingsState.getInstance().searchInputState);
+//                    }
+//                });
+//    }
 
 
     private void handleCaretMovement(Editor editor) {

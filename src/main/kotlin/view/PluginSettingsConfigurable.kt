@@ -36,10 +36,10 @@ class PluginSettingsConfigurable() : Configurable {
     private var inputSwitchStrategyComboBox: JComboBox<String>? = null
     private var switchingStrategyComboBox: JComboBox<String>? = null
 
-    private var editorComboBox: JComboBox<InputState>? = null
-    private var renameDialogComboBox: JComboBox<InputState>? = null
-    private var terminalComboBox: JComboBox<InputState>? = null
-    private var searchComboBox: JComboBox<InputState>? = null
+//    private var editorComboBox: JComboBox<InputState>? = null
+//    private var renameDialogComboBox: JComboBox<InputState>? = null
+//    private var terminalComboBox: JComboBox<InputState>? = null
+//    private var searchComboBox: JComboBox<InputState>? = null
 //    private var otherComboBox: JComboBox<InputState>? = null
 
 
@@ -94,68 +94,68 @@ class PluginSettingsConfigurable() : Configurable {
                 }
             }
 
-            group("场景默认输入法设置") {
-                row {
-                    label(FocusArea.EDITOR.name)
-                    cell(
-                        createStrategyComboBox(
-                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
-                            displayMap = mapOf(
-                                InputState.CHINESE to InputState.CHINESE.name,
-                                InputState.ENGLISH to InputState.ENGLISH.name
-                            ),
-                            selected = state.editorInputState!!
-                        )
-                    ).applyToComponent {
-                        editorComboBox = this
-                    }
-                }
-                row {
-                    label(FocusArea.RENAME_DIALOG.name)
-                    cell(
-                        createStrategyComboBox(
-                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
-                            displayMap = mapOf(
-                                InputState.CHINESE to InputState.CHINESE.name,
-                                InputState.ENGLISH to InputState.ENGLISH.name
-                            ),
-                            selected = state.renameDialogInputState!!
-                        )
-                    ).applyToComponent {
-                        renameDialogComboBox = this
-                    }
-                }
-                row {
-                    label(FocusArea.TERMINAL.name)
-                    cell(
-                        createStrategyComboBox(
-                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
-                            displayMap = mapOf(
-                                InputState.CHINESE to InputState.CHINESE.name,
-                                InputState.ENGLISH to InputState.ENGLISH.name
-                            ),
-                            selected = state.terminalInputState!!
-                        )
-                    ).applyToComponent {
-                        terminalComboBox = this
-                    }
-                }
-                row {
-                    label(FocusArea.SEARCH.name)
-                    cell(
-                        createStrategyComboBox(
-                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
-                            displayMap = mapOf(
-                                InputState.CHINESE to InputState.CHINESE.name,
-                                InputState.ENGLISH to InputState.ENGLISH.name
-                            ),
-                            selected = state.searchInputState!!
-                        )
-                    ).applyToComponent {
-                        searchComboBox = this
-                    }
-                }
-            }
+//            group("场景默认输入法设置") {
+//                row {
+//                    label(FocusArea.EDITOR.name)
+//                    cell(
+//                        createStrategyComboBox(
+//                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
+//                            displayMap = mapOf(
+//                                InputState.CHINESE to InputState.CHINESE.name,
+//                                InputState.ENGLISH to InputState.ENGLISH.name
+//                            ),
+//                            selected = state.editorInputState!!
+//                        )
+//                    ).applyToComponent {
+//                        editorComboBox = this
+//                    }
+//                }
+//                row {
+//                    label(FocusArea.RENAME_DIALOG.name)
+//                    cell(
+//                        createStrategyComboBox(
+//                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
+//                            displayMap = mapOf(
+//                                InputState.CHINESE to InputState.CHINESE.name,
+//                                InputState.ENGLISH to InputState.ENGLISH.name
+//                            ),
+//                            selected = state.renameDialogInputState!!
+//                        )
+//                    ).applyToComponent {
+//                        renameDialogComboBox = this
+//                    }
+//                }
+//                row {
+//                    label(FocusArea.TERMINAL.name)
+//                    cell(
+//                        createStrategyComboBox(
+//                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
+//                            displayMap = mapOf(
+//                                InputState.CHINESE to InputState.CHINESE.name,
+//                                InputState.ENGLISH to InputState.ENGLISH.name
+//                            ),
+//                            selected = state.terminalInputState!!
+//                        )
+//                    ).applyToComponent {
+//                        terminalComboBox = this
+//                    }
+//                }
+//                row {
+//                    label(FocusArea.SEARCH.name)
+//                    cell(
+//                        createStrategyComboBox(
+//                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
+//                            displayMap = mapOf(
+//                                InputState.CHINESE to InputState.CHINESE.name,
+//                                InputState.ENGLISH to InputState.ENGLISH.name
+//                            ),
+//                            selected = state.searchInputState!!
+//                        )
+//                    ).applyToComponent {
+//                        searchComboBox = this
+//                    }
+//                }
+//            }
             separator(JBColor.GRAY)  // 添加分隔线
             row {
                 cell(JPanel(FlowLayout(FlowLayout.RIGHT, 10, 5)).apply {
@@ -389,10 +389,10 @@ class PluginSettingsConfigurable() : Configurable {
         return !Objects.equals(inputSwitchStrategyComboBox!!.selectedItem, state.inputSwitchStrategyClass) ||
                 !Objects.equals(switchingStrategyComboBox!!.selectedItem, state.switchingStrategyClass) ||
 
-                !Objects.equals(editorComboBox!!.selectedItem, state.editorInputState) ||
-                !Objects.equals(renameDialogComboBox!!.selectedItem, state.renameDialogInputState) ||
-                !Objects.equals(terminalComboBox!!.selectedItem, state.terminalInputState) ||
-                !Objects.equals(searchComboBox!!.selectedItem, state.searchInputState) ||
+//                !Objects.equals(editorComboBox!!.selectedItem, state.editorInputState) ||
+//                !Objects.equals(renameDialogComboBox!!.selectedItem, state.renameDialogInputState) ||
+//                !Objects.equals(terminalComboBox!!.selectedItem, state.terminalInputState) ||
+//                !Objects.equals(searchComboBox!!.selectedItem, state.searchInputState) ||
 
                 !Objects.equals(zhCursorColorPanel?.selectedColor, state.zhCursorColor) ||
                 !Objects.equals(enCursorColorPanel?.selectedColor, state.enCursorColor) ||
@@ -405,10 +405,10 @@ class PluginSettingsConfigurable() : Configurable {
         state.inputSwitchStrategyClass = inputSwitchStrategyComboBox!!.selectedItem as String
         state.switchingStrategyClass = switchingStrategyComboBox!!.selectedItem as String
 
-        state.editorInputState = editorComboBox!!.selectedItem as InputState
-        state.renameDialogInputState = renameDialogComboBox!!.selectedItem as InputState
-        state.terminalInputState = terminalComboBox!!.selectedItem as InputState
-        state.searchInputState = searchComboBox!!.selectedItem as InputState
+//        state.editorInputState = editorComboBox!!.selectedItem as InputState
+//        state.renameDialogInputState = renameDialogComboBox!!.selectedItem as InputState
+//        state.terminalInputState = terminalComboBox!!.selectedItem as InputState
+//        state.searchInputState = searchComboBox!!.selectedItem as InputState
 
         state.zhCursorColor = zhCursorColorPanel?.selectedColor.let { it?.let { regular -> JBColor(regular, it) } }
         state.enCursorColor = enCursorColorPanel?.selectedColor.let { it?.let { regular -> JBColor(regular, it) } }
@@ -426,10 +426,10 @@ class PluginSettingsConfigurable() : Configurable {
         inputSwitchStrategyComboBox!!.selectedItem = state.inputSwitchStrategyClass!!
         switchingStrategyComboBox!!.selectedItem = state.switchingStrategyClass!!
 
-        editorComboBox!!.selectedItem = state.editorInputState!!
-        renameDialogComboBox!!.selectedItem = state.renameDialogInputState!!
-        terminalComboBox!!.selectedItem = state.terminalInputState!!
-        searchComboBox!!.selectedItem = state.searchInputState!!
+//        editorComboBox!!.selectedItem = state.editorInputState!!
+//        renameDialogComboBox!!.selectedItem = state.renameDialogInputState!!
+//        terminalComboBox!!.selectedItem = state.terminalInputState!!
+//        searchComboBox!!.selectedItem = state.searchInputState!!
 
         zhCursorColorPanel?.selectedColor = state.zhCursorColor ?: JBColor.RED
         enCursorColorPanel?.selectedColor = state.enCursorColor ?: JBColor.BLUE

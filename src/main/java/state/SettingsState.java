@@ -27,10 +27,10 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
     // 气泡框配置
     public Integer balloonDuration = 500;
 
-    public InputState editorInputState = InputState.ENGLISH;
-    public InputState renameDialogInputState = InputState.ENGLISH;
-    public InputState terminalInputState = InputState.ENGLISH;
-    public InputState searchInputState = InputState.ENGLISH;
+//    public InputState editorInputState = InputState.ENGLISH;
+//    public InputState renameDialogInputState = InputState.ENGLISH;
+//    public InputState terminalInputState = InputState.ENGLISH;
+//    public InputState searchInputState = InputState.ENGLISH;
 //    public InputState otherInputState = InputState.ENGLISH;
 
     // 运行时对象 (不序列化)
@@ -58,10 +58,10 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
         this.switchingStrategyClass = state.switchingStrategyClass;
         this.balloonDuration = state.balloonDuration;
 
-        this.editorInputState = state.editorInputState;
-        this.renameDialogInputState = state.renameDialogInputState;
-        this.terminalInputState = state.terminalInputState;
-        this.searchInputState = state.searchInputState;
+//        this.editorInputState = state.editorInputState;
+//        this.renameDialogInputState = state.renameDialogInputState;
+//        this.terminalInputState = state.terminalInputState;
+//        this.searchInputState = state.searchInputState;
 
 
         this.zhCursorColor = createThemeAwareColor(state.zhCursorColorRGB);

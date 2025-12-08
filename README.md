@@ -6,9 +6,9 @@
 ## 🚀 核心功能
 智能感知光标前的字符特征，精准触发输入法切换，告别手动切换中英文的繁琐操作。
 ## ⚠️ 注意事项
-1、暂时只支持windows，不支持mac、linux
-2、仅支持jetbrains全系列产品
-3、确保右下角有 输入法指示器
+1、暂时只支持windows，不支持mac、linux   
+2、仅支持jetbrains全系列产品   
+3、确保右下角有 输入法指示器   
 <img width="265" height="40" alt="image" src="https://github.com/user-attachments/assets/dc964302-1238-45ee-9f61-1cbf7037f902" />   
 - ###  输入法指示器设置步骤（仅win10）：
 - #### 打开设置菜单

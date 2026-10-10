@@ -1,6 +1,6 @@
 <idea-plugin allow-bundled-update="true">
 
-    <id>com.github.zy1263188600.key-switch</id>
+    <id>com.github.zy1263188600.keyswitch</id>
     <name>key-switch</name>
     <vendor>zy1263188600</vendor>
 

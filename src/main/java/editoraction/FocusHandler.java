@@ -1,11 +1,8 @@
 package editoraction;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.impl.EditorComponentImpl;
-
 import java.awt.*;
 
-public class FocusHandel {
+public class FocusHandler {
 
     public static String getFocusedComponentHierarchy() {
         Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();

@@ -1,6 +1,6 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# smart input Changelog
+# key-switch Changelog
 
 ## [0.0.7] - 2026-10-10
 ### Added
@@ -8,12 +8,10 @@
 - 设置页新增 ImmDirect 切换选项与一键测试
 - 欢迎通知新增“不再提示”持久化开关
 ### Changed
-- 项目重命名为 smart input（plugin id 与市场链接保持不变）
 - 结构优化：修正 utlis/FocusHandel 包类拼写；Win32IME 搬入 impl 包并拆分 JNA 接口；合并重复启动项；CursorTrackerService 抽取可测纯函数 CaretDecision
 ### Fixed
 - 切换策略后重置 Win32IME 去重缓存，避免旧状态残留
-- UIAutomation 遇到未知托盘按钮不再静默误判为中文，改为大声失败走 Imm32 fallback
-- 移除光标监听高频 System.out 日志，统一走 IDEA 日志
+- UIAutomation 遇到未知托盘按钮不再静默误判为中文，改为失败走 Imm32 fallback
 - 欢迎通知重启不再重复弹出
 
 ## [Unreleased]

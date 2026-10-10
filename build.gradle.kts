@@ -1,6 +1,7 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import java.io.File
 
 plugins {
     id("java") // Java support
@@ -146,12 +147,55 @@ kover {
 }
 
 tasks {
+    // 把 buildPlugin 放进 Gradle 面板 Tasks > build 分组，顺手一点
+    named("buildPlugin") {
+        group = "build"
+    }
     wrapper {
         gradleVersion = providers.gradleProperty("gradleVersion").get()
     }
 
     publishPlugin {
         dependsOn(patchChangelog)
+    }
+
+    // buildSearchableOptions 要求 headless IDE 运行在默认 locale，
+    // 但 sandbox config 与 runIde 共用：在 runIde 里切过中文后会持久化 selectedLocale，
+    // 下次构建就会以 IllegalArgumentException("Locale must be default") 失败。构建前先清理。
+    // 注意：doFirst 闭包内只捕获普通 String，保持 configuration-cache 可序列化。
+    named("buildSearchableOptions") {
+        val sandboxRootPath = layout.projectDirectory.dir(".intellijPlatform/sandbox").asFile.absolutePath
+        doFirst {
+            val sandboxRoot = File(sandboxRootPath)
+            if (sandboxRoot.isDirectory) {
+                sandboxRoot.walkTopDown()
+                    .filter { it.isFile && it.name == "ide.general.xml" }
+                    .forEach { file ->
+                        try {
+                            val document = javax.xml.parsers.DocumentBuilderFactory.newInstance()
+                                .newDocumentBuilder().parse(file)
+                            val components = document.getElementsByTagName("component")
+                            var changed = false
+                            for (i in components.length - 1 downTo 0) {
+                                val node = components.item(i)
+                                if (node is org.w3c.dom.Element && node.getAttribute("name") == "LocalizationStateService") {
+                                    node.parentNode.removeChild(node)
+                                    changed = true
+                                }
+                            }
+                            if (changed) {
+                                javax.xml.transform.TransformerFactory.newInstance().newTransformer().transform(
+                                    javax.xml.transform.dom.DOMSource(document),
+                                    javax.xml.transform.stream.StreamResult(file)
+                                )
+                                logger.lifecycle("Stripped non-default locale from ${file.path} for buildSearchableOptions")
+                            }
+                        } catch (e: Exception) {
+                            logger.warn("Failed to strip locale from ${file.path}: ${e.message}")
+                        }
+                    }
+            }
+        }
     }
 }
 

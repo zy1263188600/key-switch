@@ -116,7 +116,7 @@ class PluginSettingsConfigurable() : Configurable {
 
             label.addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent) {
-                    BrowserUtil.browse("https://github.com/zy1263188600/key-switch?tab=readme-ov-file#%EF%B8%8F-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9")
+                    BrowserUtil.browse("https://github.com/zy1263188600/smart-input?tab=readme-ov-file#%EF%B8%8F-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9")
                 }
 
                 override fun mouseEntered(e: MouseEvent) {
@@ -138,7 +138,7 @@ class PluginSettingsConfigurable() : Configurable {
 
             starLabel.addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent) {
-                    BrowserUtil.browse("https://github.com/zy1263188600/key-switch")
+                    BrowserUtil.browse("https://github.com/zy1263188600/smart-input")
                 }
 
                 override fun mouseEntered(e: MouseEvent) {
@@ -358,5 +358,5 @@ class PluginSettingsConfigurable() : Configurable {
         updateDynamicSettings()
     }
 
-    override fun getDisplayName() = "smart input"
+    override fun getDisplayName() = "智能输入法切换插件"
 }

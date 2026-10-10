@@ -358,5 +358,5 @@ class PluginSettingsConfigurable() : Configurable {
         updateDynamicSettings()
     }
 
-    override fun getDisplayName() = "智能输入法切换插件"
+    override fun getDisplayName() = "smart input"
 }

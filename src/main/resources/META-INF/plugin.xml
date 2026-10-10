@@ -1,7 +1,7 @@
 <idea-plugin allow-bundled-update="true">
 
-    <id>com.github.zy1263188600.keyswitch</id>
-    <name>key-switch</name>
+    <id>com.github.zy1263188600.smart-input</id>
+    <name>smart input</name>
     <vendor>zy1263188600</vendor>
 
 <!--    <depends>com.intellij.java</depends>-->
@@ -16,7 +16,7 @@
         <applicationConfigurable
                 groupId="tools"
                 instance="view.PluginSettingsConfigurable"
-                displayName="key-switch"
+                displayName="smart input"
                 os="windows"/>
     </extensions>
 </idea-plugin>

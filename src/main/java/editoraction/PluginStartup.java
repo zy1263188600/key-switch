@@ -41,7 +41,7 @@ public class PluginStartup implements com.intellij.openapi.startup.ProjectActivi
         ApplicationManager.getApplication().invokeLater(() -> {
             Notification notification = new Notification(
                     "key-switch",
-                    "欢迎使用 key-switch 智能输入法自动切换工具",
+                    "欢迎使用 smart input 智能输入法自动切换工具",
                     "这个工具旨在帮助您更高效地进行编程，不再频繁切换中英文输入状态",
                     NotificationType.INFORMATION
             );
@@ -52,7 +52,7 @@ public class PluginStartup implements com.intellij.openapi.startup.ProjectActivi
                 public void actionPerformed(@NotNull AnActionEvent e) {
                     ShowSettingsUtil.getInstance().showSettingsDialog(
                             e.getProject(),
-                            "key-switch" // 必须与plugin.xml 中定义的<name>完全一致
+                                "smart input" // 必须与plugin.xml 中 applicationConfigurable 的 displayName 完全一致
                     );
                 }
             });

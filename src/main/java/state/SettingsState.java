@@ -5,7 +5,6 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.ui.JBColor;
-import enums.InputState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,8 +16,10 @@ import java.awt.*;
 )
 public class SettingsState implements PersistentStateComponent<SettingsState> {
     // 策略配置
-    public String inputSwitchStrategyClass = "UIAutomationSwitcher";
+    public String inputSwitchStrategyClass = "ImmDirectSwitcher";
     public String switchingStrategyClass = "CursorColorStrategy";
+    // 欢迎通知开关（持久化，重启不重复打扰）
+    public boolean showWelcomeNotification = true;
 
     // 光标颜色
     public int zhCursorColorRGB = JBColor.RED.getRGB();
@@ -26,12 +27,6 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
 
     // 气泡框配置
     public Integer balloonDuration = 500;
-
-//    public InputState editorInputState = InputState.ENGLISH;
-//    public InputState renameDialogInputState = InputState.ENGLISH;
-//    public InputState terminalInputState = InputState.ENGLISH;
-//    public InputState searchInputState = InputState.ENGLISH;
-//    public InputState otherInputState = InputState.ENGLISH;
 
     // 运行时对象 (不序列化)
     public transient JBColor zhCursorColor;
@@ -56,13 +51,8 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
     public void loadState(@NotNull SettingsState state) {
         this.inputSwitchStrategyClass = state.inputSwitchStrategyClass;
         this.switchingStrategyClass = state.switchingStrategyClass;
+        this.showWelcomeNotification = state.showWelcomeNotification;
         this.balloonDuration = state.balloonDuration;
-
-//        this.editorInputState = state.editorInputState;
-//        this.renameDialogInputState = state.renameDialogInputState;
-//        this.terminalInputState = state.terminalInputState;
-//        this.searchInputState = state.searchInputState;
-
 
         this.zhCursorColor = createThemeAwareColor(state.zhCursorColorRGB);
         this.enCursorColor = createThemeAwareColor(state.enCursorColorRGB);

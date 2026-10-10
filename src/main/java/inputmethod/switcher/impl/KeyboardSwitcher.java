@@ -1,6 +1,5 @@
 package inputmethod.switcher.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
 import enums.InputState;
 
 import com.sun.jna.Library;
@@ -10,7 +9,7 @@ import com.sun.jna.platform.win32.WinDef.HWND;
 import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
 import inputmethod.switcher.InputMethodSwitchStrategy;
-import utlis.LogUtil;
+import utils.LogUtil;
 
 
 import static com.sun.jna.platform.win32.WinUser.KEYBDINPUT.KEYEVENTF_KEYUP;
@@ -115,7 +114,7 @@ public class KeyboardSwitcher implements InputMethodSwitchStrategy {
             long nano_l = System.nanoTime() - startTimeNano_l;
             double milliseconds_l = nano_l / 1e6;
             String msFormatted_l = String.format("%.6f", milliseconds_l);
-            LogUtil.info("  执行时间: " + msFormatted_l + " ms");
+            LogUtil.debug("  执行时间: " + msFormatted_l + " ms");
         }
     }
 

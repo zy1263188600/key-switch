@@ -14,7 +14,7 @@ import mmarquee.uiautomation.IUIAutomationElement;
 import mmarquee.uiautomation.IUIAutomationLegacyIAccessiblePattern;
 import mmarquee.uiautomation.IUIAutomationLegacyIAccessiblePatternConverter;
 import mmarquee.uiautomation.TreeScope;
-import utlis.LogUtil;
+import utils.LogUtil;
 
 import java.util.List;
 
@@ -80,7 +80,7 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
             LOG.error("Input  method switch failed: " + e.getErrorCode(), e);
         } finally {
             double durationMs = (System.nanoTime() - startTime) / 1e6;
-            LogUtil.info(" 执行时间: " + String.format("%.6f", durationMs) + " ms");
+            LogUtil.debug(" 执行时间: " + String.format("%.6f", durationMs) + " ms");
         }
     }
 
@@ -98,7 +98,13 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
     private Boolean checkEnglishModeWithCache() throws AutomationException {
         Element targetButton = findValidInputMethodButton();
         InputState state = matchInputMethodButton(targetButton);
-        return state == InputState.ENGLISH;
+        // 未知按钮名：大声失败走 Imm32 fallback，不静默误判为中文
+        return switch (state) {
+            case ENGLISH -> true;
+            case CHINESE -> false;
+            default -> throw new UIAutomationSwitcherException(ErrorCode.NO_VALID_BUTTON,
+                    "Unrecognized input method button state: " + state);
+        };
     }
 
     // ======= 重试机制 =======
@@ -221,10 +227,14 @@ public class WindowsUIAutomationSwitcher implements InputMethodSwitchStrategy {
     }
 
     private InputState matchInputMethodButton(Element element) throws AutomationException {
-        if (element == null) return InputState.NONE;
+        if (element == null) {
+            return InputState.NONE;
+        }
 
         String name = element.getName();
-        if (name == null || name.isEmpty()) return InputState.NONE;
+        if (name == null || name.isEmpty()) {
+            return InputState.NONE;
+        }
 
         for (String keyword : INPUT_METHOD_KEYWORDS) {
             if (name.contains(keyword)) {

@@ -1,22 +1,22 @@
 <idea-plugin allow-bundled-update="true">
-    <id>com.github.zy1263188600.keyswitch</id>
-    <name>key-switch</name>
+
+    <id>com.github.zy1263188600.smart-input</id>
+    <name>smart input</name>
     <vendor>zy1263188600</vendor>
 
 <!--    <depends>com.intellij.java</depends>-->
     <depends>com.intellij.modules.platform</depends>
     <extensions defaultExtensionNs="com.intellij">
         <!--        设置-工具中 配置页面-->
-        <postStartupActivity implementation="editoraction.PluginStartup"/>
-
-        <notificationGroup id="key-switch" displayType="BALLOON" isLogByDefault="true"/>
-        <postStartupActivity implementation="PluginStartupListener"/>
+        <postStartupActivity implementation="editoraction.PluginStartup" os="windows"/>
+        <notificationGroup id="key-switch" displayType="BALLOON" isLogByDefault="true" os="windows"/>
         <!-- 应用级配置 -->
-        <applicationService serviceImplementation="state.SettingsState"/>
+        <applicationService serviceImplementation="state.SettingsState" os="windows" />
         <!-- 注册到设置页面 -->
         <applicationConfigurable
                 groupId="tools"
                 instance="view.PluginSettingsConfigurable"
-                displayName="key-switch"/>
+                displayName="smart input"
+                os="windows"/>
     </extensions>
 </idea-plugin>

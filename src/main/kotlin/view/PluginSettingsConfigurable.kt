@@ -8,6 +8,7 @@ import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.util.Disposer
 import inputmethod.switcher.SwitcherStrategyFactory
+import inputmethod.switcher.impl.Win32IME
 import java.awt.Component
 import java.awt.Dimension
 import javax.swing.*
@@ -19,8 +20,6 @@ import com.intellij.ui.components.JBTextField
 import java.awt.FlowLayout
 import javax.swing.JComponent
 import com.intellij.util.ui.JBUI
-import editoraction.FocusHandel.FocusArea
-import enums.InputState
 import state.SettingsState
 import java.awt.Cursor
 import java.awt.event.KeyAdapter
@@ -36,13 +35,6 @@ class PluginSettingsConfigurable() : Configurable {
     private var inputSwitchStrategyComboBox: JComboBox<String>? = null
     private var switchingStrategyComboBox: JComboBox<String>? = null
 
-//    private var editorComboBox: JComboBox<InputState>? = null
-//    private var renameDialogComboBox: JComboBox<InputState>? = null
-//    private var terminalComboBox: JComboBox<InputState>? = null
-//    private var searchComboBox: JComboBox<InputState>? = null
-//    private var otherComboBox: JComboBox<InputState>? = null
-
-
     private var zhCursorColorPanel: ColorPanel? = null
     private var enCursorColorPanel: ColorPanel? = null
     private val state = SettingsState.getInstance() ?: throw IllegalStateException("SettingsState must not be null")
@@ -56,9 +48,10 @@ class PluginSettingsConfigurable() : Configurable {
                     label(switchLabel)
                     cell(
                         createStrategyComboBox(
-                            items = arrayOf("UIAutomationSwitcher", "KeyboardSwitcher"),
+                            items = arrayOf("ImmDirectSwitcher", "UIAutomationSwitcher", "KeyboardSwitcher"),
                             displayMap = mapOf(
-                                "UIAutomationSwitcher" to "UIAutomation模拟点击托盘输入法按钮(默认)",
+                                "ImmDirectSwitcher" to "ImmDirect定向直切(默认)",
+                                "UIAutomationSwitcher" to "UIAutomation模拟点击托盘输入法按钮",
                                 "KeyboardSwitcher" to "shift快捷键(兼容性好，可能误触发事件)"
                             ),
                             selected = state.inputSwitchStrategyClass!!
@@ -94,68 +87,6 @@ class PluginSettingsConfigurable() : Configurable {
                 }
             }
 
-//            group("场景默认输入法设置") {
-//                row {
-//                    label(FocusArea.EDITOR.name)
-//                    cell(
-//                        createStrategyComboBox(
-//                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
-//                            displayMap = mapOf(
-//                                InputState.CHINESE to InputState.CHINESE.name,
-//                                InputState.ENGLISH to InputState.ENGLISH.name
-//                            ),
-//                            selected = state.editorInputState!!
-//                        )
-//                    ).applyToComponent {
-//                        editorComboBox = this
-//                    }
-//                }
-//                row {
-//                    label(FocusArea.RENAME_DIALOG.name)
-//                    cell(
-//                        createStrategyComboBox(
-//                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
-//                            displayMap = mapOf(
-//                                InputState.CHINESE to InputState.CHINESE.name,
-//                                InputState.ENGLISH to InputState.ENGLISH.name
-//                            ),
-//                            selected = state.renameDialogInputState!!
-//                        )
-//                    ).applyToComponent {
-//                        renameDialogComboBox = this
-//                    }
-//                }
-//                row {
-//                    label(FocusArea.TERMINAL.name)
-//                    cell(
-//                        createStrategyComboBox(
-//                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
-//                            displayMap = mapOf(
-//                                InputState.CHINESE to InputState.CHINESE.name,
-//                                InputState.ENGLISH to InputState.ENGLISH.name
-//                            ),
-//                            selected = state.terminalInputState!!
-//                        )
-//                    ).applyToComponent {
-//                        terminalComboBox = this
-//                    }
-//                }
-//                row {
-//                    label(FocusArea.SEARCH.name)
-//                    cell(
-//                        createStrategyComboBox(
-//                            items = arrayOf(InputState.CHINESE, InputState.ENGLISH),
-//                            displayMap = mapOf(
-//                                InputState.CHINESE to InputState.CHINESE.name,
-//                                InputState.ENGLISH to InputState.ENGLISH.name
-//                            ),
-//                            selected = state.searchInputState!!
-//                        )
-//                    ).applyToComponent {
-//                        searchComboBox = this
-//                    }
-//                }
-//            }
             separator(JBColor.GRAY)  // 添加分隔线
             row {
                 cell(JPanel(FlowLayout(FlowLayout.RIGHT, 10, 5)).apply {
@@ -388,12 +319,6 @@ class PluginSettingsConfigurable() : Configurable {
         }
         return !Objects.equals(inputSwitchStrategyComboBox!!.selectedItem, state.inputSwitchStrategyClass) ||
                 !Objects.equals(switchingStrategyComboBox!!.selectedItem, state.switchingStrategyClass) ||
-
-//                !Objects.equals(editorComboBox!!.selectedItem, state.editorInputState) ||
-//                !Objects.equals(renameDialogComboBox!!.selectedItem, state.renameDialogInputState) ||
-//                !Objects.equals(terminalComboBox!!.selectedItem, state.terminalInputState) ||
-//                !Objects.equals(searchComboBox!!.selectedItem, state.searchInputState) ||
-
                 !Objects.equals(zhCursorColorPanel?.selectedColor, state.zhCursorColor) ||
                 !Objects.equals(enCursorColorPanel?.selectedColor, state.enCursorColor) ||
                 (balloonDurationField?.isVisible == true && balloonDurationField?.text != state.balloonDuration?.toString())
@@ -402,13 +327,13 @@ class PluginSettingsConfigurable() : Configurable {
     }
 
     override fun apply() {
+        val oldStrategy = state.inputSwitchStrategyClass
         state.inputSwitchStrategyClass = inputSwitchStrategyComboBox!!.selectedItem as String
         state.switchingStrategyClass = switchingStrategyComboBox!!.selectedItem as String
-
-//        state.editorInputState = editorComboBox!!.selectedItem as InputState
-//        state.renameDialogInputState = renameDialogComboBox!!.selectedItem as InputState
-//        state.terminalInputState = terminalComboBox!!.selectedItem as InputState
-//        state.searchInputState = searchComboBox!!.selectedItem as InputState
+        if (oldStrategy != state.inputSwitchStrategyClass) {
+            // 策略变化时清空 Win32IME 去重缓存，避免旧状态残留
+            Win32IME.resetState()
+        }
 
         state.zhCursorColor = zhCursorColorPanel?.selectedColor.let { it?.let { regular -> JBColor(regular, it) } }
         state.enCursorColor = enCursorColorPanel?.selectedColor.let { it?.let { regular -> JBColor(regular, it) } }
@@ -416,7 +341,7 @@ class PluginSettingsConfigurable() : Configurable {
         if (switchingStrategyComboBox?.selectedItem == "BalloonStrategy") {
             state.balloonDuration = try {
                 balloonDurationField?.text?.toInt() ?: 2000
-            } catch (e: NumberFormatException) {
+            } catch (_: NumberFormatException) {
                 2000
             }
         }
@@ -426,11 +351,6 @@ class PluginSettingsConfigurable() : Configurable {
         inputSwitchStrategyComboBox!!.selectedItem = state.inputSwitchStrategyClass!!
         switchingStrategyComboBox!!.selectedItem = state.switchingStrategyClass!!
 
-//        editorComboBox!!.selectedItem = state.editorInputState!!
-//        renameDialogComboBox!!.selectedItem = state.renameDialogInputState!!
-//        terminalComboBox!!.selectedItem = state.terminalInputState!!
-//        searchComboBox!!.selectedItem = state.searchInputState!!
-
         zhCursorColorPanel?.selectedColor = state.zhCursorColor ?: JBColor.RED
         enCursorColorPanel?.selectedColor = state.enCursorColor ?: JBColor.BLUE
         balloonDurationField?.text = state.balloonDuration?.toString() ?: "2000"
@@ -438,5 +358,5 @@ class PluginSettingsConfigurable() : Configurable {
         updateDynamicSettings()
     }
 
-    override fun getDisplayName() = "智能输入法切换插件"
+    override fun getDisplayName() = "smart input"
 }
